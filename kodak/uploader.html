@@ -586,6 +586,7 @@
                 box-shadow: none;
                 margin: 0;
                 transform: none;
+                font-family: 'Courier New', monospace !important;
             }
             
             .no-print {
@@ -637,6 +638,16 @@
                 margin-top: 15px;
                 font-size: 8pt;
                 color: #666;
+            }
+            
+            /* تحسين جدول المنتجات في الطباعة */
+            .receipt-items th {
+                border-bottom: 2px solid #000;
+                padding-bottom: 5px;
+            }
+            
+            .receipt-items td {
+                padding: 4px 0;
             }
         }
         
@@ -795,43 +806,67 @@
             animation: blink 1s infinite;
         }
         
-        /* تأثير الوميض للطلبات الجديدة */
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px #e53935, 0 0 10px #e53935; }
-            50% { box-shadow: 0 0 20px #e53935, 0 0 30px #e53935; }
-            100% { box-shadow: 0 0 5px #e53935, 0 0 10px #e53935; }
+        /* تحسينات للفاتورة في الشاشة */
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 12px;
         }
         
-        .glowing-order {
-            animation: glow 2s infinite;
-            border-color: #ff6b6b !important;
+        .receipt-table th {
+            text-align: right;
+            border-bottom: 2px solid #000;
+            padding: 8px 0;
+            font-weight: bold;
         }
         
-        /* تأثير الوهج البسيط */
-        @keyframes subtle-glow {
-            0%, 100% { 
-                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08), 0 0 0 rgba(229, 57, 53, 0.3);
-            }
-            50% { 
-                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08), 0 0 15px rgba(229, 57, 53, 0.5);
-            }
+        .receipt-table td {
+            text-align: right;
+            border-bottom: 1px dashed #ccc;
+            padding: 6px 0;
         }
         
-        .new-order-glow {
-            animation: subtle-glow 2s infinite ease-in-out;
-            position: relative;
-            overflow: hidden;
+        .receipt-table .item-note-cell {
+            font-size: 10px;
+            color: #666;
+            font-style: italic;
         }
         
-        .new-order-glow::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #e53935, #ff6b6b, #e53935);
-            z-index: 1;
+        /* تحسينات إضافية */
+        .order-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #e53935;
+        }
+        
+        /* تحسينات للأزرار */
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        /* تحسينات للوقت */
+        .time-display {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #333;
         }
     </style>
 </head>
@@ -959,32 +994,33 @@
     <!-- فاتورة الطباعة (مخفية) -->
     <div id="receipt" style="display: none; width: 80mm; padding: 10px; background: white; font-family: 'Courier New', monospace;">
         <div class="receipt-header">
-            <h2>مطعم ومخبز الطازج</h2>
-            <p>عمان - الجبيهة</p>
-            <p>هاتف: 0778715612</p>
+            <h2 style="margin: 0; font-size: 16pt;">مطعم ومخبز الطازج</h2>
+            <p style="margin: 2px 0; font-size: 10pt;">عمان - الجبيهة</p>
+            <p style="margin: 2px 0; font-size: 10pt;">هاتف: 0778715612</p>
         </div>
         
         <div class="receipt-info">
-            <p id="receiptOrderId">الطلب: #20454</p>
-            <p id="receiptDate">التاريخ: 12/12/2023 10:30</p>
+            <p id="receiptOrderId" style="margin: 3px 0; font-size: 10pt;">الطلب: #20454</p>
+            <p id="receiptDate" style="margin: 3px 0; font-size: 10pt;">التاريخ: 12/12/2023 10:30</p>
             <hr style="border: none; border-top: 1px dashed #000; margin: 8px 0;">
         </div>
         
         <div class="customer-info">
-            <p id="receiptCustomerName">العميل: محمد سعيد</p>
-            <p id="receiptCustomerPhone">الهاتف: 0778715612</p>
-            <p id="receiptArea">المنطقة: عمان - الجبيهة</p>
-            <p id="receiptPayment">الدفع: كاش</p>
+            <p id="receiptCustomerName" style="margin: 3px 0; font-size: 10pt;">العميل: محمد سعيد</p>
+            <p id="receiptCustomerPhone" style="margin: 3px 0; font-size: 10pt;">الهاتف: 0778715612</p>
+            <p id="receiptPickupType" style="margin: 3px 0; font-size: 10pt; font-weight: bold;">استلام</p>
+            <p id="receiptPayment" style="margin: 3px 0; font-size: 10pt;">الدفع: كاش</p>
         </div>
         
         <hr style="border: none; border-top: 1px dashed #000; margin: 8px 0;">
         
         <div class="receipt-items">
-            <table>
+            <table class="receipt-table">
                 <thead>
                     <tr>
-                        <th>المنتج</th>
-                        <th>الكمية</th>
+                        <th style="width: 50%;">المنتج</th>
+                        <th style="width: 25%; text-align: center;">الكمية</th>
+                        <th style="width: 25%;">الملاحظات</th>
                     </tr>
                 </thead>
                 <tbody id="receiptItemsBody">
@@ -995,13 +1031,18 @@
         
         <hr style="border: none; border-top: 1px dashed #000; margin: 8px 0;">
         
+        <div class="order-stats" id="receiptStats" style="margin: 10px 0;">
+            <!-- سيتم إضافة إحصائيات الطلب هنا -->
+        </div>
+        
         <div class="receipt-total">
-            <p id="receiptTotal">الإجمالي: 4.50 دينار</p>
+            <p id="receiptTotal" style="font-weight: bold; font-size: 12pt; text-align: center; margin: 10px 0;">الإجمالي: 4.50 دينار</p>
         </div>
         
         <div class="receipt-footer">
-            <p>شكراً لاختياركم مطعمنا</p>
-            <p>نتمنى لكم وجبة شهية</p>
+            <p style="margin: 5px 0; font-size: 9pt;">شكراً لاختياركم مطعمنا</p>
+            <p style="margin: 5px 0; font-size: 9pt;">نتمنى لكم وجبة شهية</p>
+            <p style="margin: 5px 0; font-size: 8pt; color: #666;">تاريخ الطباعة: <span id="receiptPrintDate"></span></p>
         </div>
     </div>
 
@@ -1030,7 +1071,7 @@
         let audioBuffer = null;
         let repeatSoundInterval = null;
         let pendingOrdersToAlert = new Set();
-        let glowingOrderCards = new Map(); // لتتبع الكروت التي لها تأثير الوهج
+        let countdownIntervals = {};
         
         // عناصر DOM
         const newOrdersContainer = document.getElementById('newOrders');
@@ -1114,29 +1155,19 @@
             }
         }
         
-        // تكرار صوت التنبيه للطلبات المنتظرة لمدة 10 ثوانٍ
+        // تكرار صوت التنبيه للطلبات المنتظرة
         function startRepeatSoundForOrder(orderKey) {
             if (!soundEnabled) return;
             
             pendingOrdersToAlert.add(orderKey);
             
-            // إذا كان هناك فاصل زمني يعمل بالفعل، لا تبدأ واحداً جديداً
             if (repeatSoundInterval) return;
-            
-            let soundCount = 0;
-            const maxSounds = 5; // 10 ثوانٍ = 5 مرات كل 2 ثانية
             
             repeatSoundInterval = setInterval(async () => {
                 if (pendingOrdersToAlert.size > 0 && soundEnabled) {
                     await playAlertSound();
-                    soundCount++;
-                    
-                    // توقف بعد 10 ثوانٍ (5 مرات)
-                    if (soundCount >= maxSounds) {
-                        stopRepeatSoundForOrder(orderKey);
-                    }
                 }
-            }, 2000); // كل 2 ثانية
+            }, 8000); // كل 8 ثواني
         }
         
         function stopRepeatSoundForOrder(orderKey) {
@@ -1206,7 +1237,7 @@
             // تشغيل الصوت
             await playAlertSound();
             
-            // بدء تكرار الصوت للطلب الجديد لمدة 10 ثوانٍ
+            // بدء تكرار الصوت للطلب الجديد
             startRepeatSoundForOrder(orderKey);
             
             // إخفاء الإشعار بعد 5 ثواني
@@ -1215,152 +1246,249 @@
             }, 5000);
         }
         
-        // تنسيق التاريخ
+        // تنسيق التاريخ - إصلاح المشكلة
         function formatDate(timestamp) {
             if (!timestamp) return 'غير محدد';
             
-            const date = new Date(timestamp);
-            if (isNaN(date.getTime())) return 'غير محدد';
-            
-            return date.toLocaleString('ar-EG', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
+            try {
+                const date = new Date(timestamp);
+                if (isNaN(date.getTime())) {
+                    // إذا كان timestamp ليس رقمًا، حاول تحويله
+                    const parsedTimestamp = parseInt(timestamp);
+                    if (!isNaN(parsedTimestamp)) {
+                        const newDate = new Date(parsedTimestamp);
+                        if (!isNaN(newDate.getTime())) {
+                            return newDate.toLocaleString('ar-EG', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                    }
+                    return 'غير محدد';
+                }
+                
+                return date.toLocaleString('ar-EG', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            } catch (e) {
+                console.error('خطأ في تنسيق التاريخ:', e);
+                return 'غير محدد';
+            }
         }
         
-        // حساب الوقت المتبقي
+        // تنسيق التاريخ للطباعة
+        function formatDateForPrint(timestamp) {
+            if (!timestamp) return 'غير محدد';
+            
+            try {
+                const date = new Date(timestamp);
+                if (isNaN(date.getTime())) {
+                    const parsedTimestamp = parseInt(timestamp);
+                    if (!isNaN(parsedTimestamp)) {
+                        const newDate = new Date(parsedTimestamp);
+                        if (!isNaN(newDate.getTime())) {
+                            return newDate.toLocaleString('ar-EG', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                    }
+                    return 'غير محدد';
+                }
+                
+                return date.toLocaleString('ar-EG', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                console.error('خطأ في تنسيق التاريخ للطباعة:', e);
+                return 'غير محدد';
+            }
+        }
+        
+        // حساب الوقت المتبقي - إصلاح مشكلة NaN
         function getTimeRemaining(order) {
-            if (!order.prepTime) return null;
-            
-            const orderDate = new Date(order.timestamp);
-            const acceptedAt = order.acceptedAt ? new Date(order.acceptedAt) : orderDate;
-            const addedMinutes = order.addedMinutes || 0;
-            const totalPrepTime = (order.prepTime || 15) + addedMinutes;
-            
-            const now = new Date();
-            const diffMs = now - acceptedAt;
-            const diffMins = Math.floor(diffMs / 60000);
-            const minutesLeft = totalPrepTime - diffMins;
-            
-            return Math.max(0, minutesLeft);
+            try {
+                if (!order || !order.prepTime) return order?.prepTime || 15;
+                
+                const orderDate = new Date(order.timestamp);
+                const acceptedAt = order.acceptedAt ? new Date(order.acceptedAt) : orderDate;
+                
+                // التحقق من صحة التاريخ
+                if (isNaN(acceptedAt.getTime())) {
+                    return order.prepTime || 15;
+                }
+                
+                const addedMinutes = order.addedMinutes || 0;
+                const totalPrepTime = (parseInt(order.prepTime) || 15) + parseInt(addedMinutes);
+                
+                const now = new Date();
+                const diffMs = now - acceptedAt;
+                const diffMins = Math.floor(diffMs / 60000);
+                const minutesLeft = totalPrepTime - diffMins;
+                
+                // التحقق من أن النتيجة ليست NaN
+                if (isNaN(minutesLeft)) {
+                    return totalPrepTime;
+                }
+                
+                return Math.max(0, minutesLeft);
+            } catch (e) {
+                console.error('خطأ في حساب الوقت المتبقي:', e);
+                return order?.prepTime || 15;
+            }
         }
         
         // إنشاء كارت طلب جديد
         function createOrderCard(order, isNew = true) {
-            const orderType = order.orderType || 'توصيل';
-            const prepTime = order.prepTime || 15;
-            const addedMinutes = order.addedMinutes || 0;
-            const totalPrepTime = prepTime + addedMinutes;
-            
-            const card = document.createElement('div');
-            card.className = 'order-card new-order';
-            
-            // إضافة تأثير الوهج للطلبات الجديدة غير المقبولة
-            if (isNew && (!order.status || order.status === 'pending')) {
-                card.classList.add('new-order-glow');
-                glowingOrderCards.set(order.key, card);
-            }
-            
-            card.dataset.key = order.key;
-            
-            // تحديد لون الحالة
-            let statusClass = 'status-pending';
-            let statusText = 'قيد الانتظار';
-            
-            if (order.status === 'accepted') {
-                statusClass = 'status-accepted';
-                statusText = 'مقبول';
-            } else if (order.status === 'ready') {
-                statusClass = 'status-ready';
-                statusText = 'جاهز';
-            } else if (order.overdue) {
-                statusClass = 'status-overdue';
-                statusText = 'متأخر';
-            }
-            
-            // حساب الوقت المتبقي
-            const timeRemaining = getTimeRemaining(order);
-            const isOverdue = timeRemaining !== null && timeRemaining <= 0;
-            
-            card.innerHTML = `
-                <div class="order-header">
-                    <span class="order-id">#${order.id || order.key.substring(0, 6)}</span>
-                    <div>
-                        <span class="status-badge ${statusClass}">${statusText}</span>
-                        <span class="order-type">${orderType}</span>
+            try {
+                const orderType = order.orderType === 'توصيل' ? 'توصيل' : 'استلام';
+                const prepTime = parseInt(order.prepTime) || 15;
+                const addedMinutes = parseInt(order.addedMinutes) || 0;
+                const totalPrepTime = prepTime + addedMinutes;
+                
+                const card = document.createElement('div');
+                card.className = 'order-card new-order';
+                card.dataset.key = order.key;
+                
+                // تحديد لون الحالة
+                let statusClass = 'status-pending';
+                let statusText = 'قيد الانتظار';
+                
+                if (order.status === 'accepted') {
+                    statusClass = 'status-accepted';
+                    statusText = 'مقبول';
+                } else if (order.status === 'ready') {
+                    statusClass = 'status-ready';
+                    statusText = 'جاهز';
+                } else if (order.overdue) {
+                    statusClass = 'status-overdue';
+                    statusText = 'متأخر';
+                }
+                
+                // حساب الوقت المتبقي مع معالجة الأخطاء
+                const timeRemaining = getTimeRemaining(order);
+                const isOverdue = timeRemaining !== null && timeRemaining <= 0;
+                
+                // نص وقت التحضير
+                let prepTimeText = '';
+                if (typeof timeRemaining === 'number' && !isNaN(timeRemaining)) {
+                    if (timeRemaining <= 0 && order.status === 'accepted') {
+                        prepTimeText = `تأخر: ${Math.abs(timeRemaining)} دقيقة`;
+                    } else {
+                        prepTimeText = `الوقت المتبقي: ${timeRemaining} دقيقة`;
+                    }
+                } else {
+                    prepTimeText = `التحضير: ${totalPrepTime} دقيقة`;
+                }
+                
+                // إضافة الإضافات إذا وجدت
+                if (addedMinutes > 0) {
+                    prepTimeText += ` (+${addedMinutes})`;
+                }
+                
+                card.innerHTML = `
+                    <div class="order-header">
+                        <span class="order-id">#${order.id || order.key.substring(0, 6)}</span>
+                        <div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                            ${orderType === 'توصيل' ? '' : `<span class="order-type">${orderType}</span>`}
+                        </div>
                     </div>
-                </div>
-                
-                <div class="customer-info">
-                    <div class="customer-name">${order.customerName || 'غير معروف'}</div>
-                    <div class="customer-phone">
-                        <i class="fas fa-phone"></i>
-                        ${order.customerPhone || 'لا يوجد'}
+                    
+                    <div class="customer-info">
+                        <div class="customer-name">${order.customerName || 'غير معروف'}</div>
+                        <div class="customer-phone">
+                            <i class="fas fa-phone"></i>
+                            ${order.customerPhone || 'لا يوجد'}
+                        </div>
                     </div>
-                </div>
-                
-                ${order.deliveryArea ? `
-                <div class="arrival-time">
-                    <i class="fas fa-map-marker-alt"></i>
-                    ${order.deliveryArea}
-                </div>
-                ` : ''}
-                
-                <div class="time-controls">
-                    ${isNew ? `
-                    <button class="time-btn" onclick="addExtraTime('${order.key}', 5)">+5 دقائق</button>
-                    <button class="time-btn" onclick="addExtraTime('${order.key}', 10)">+10 دقائق</button>
-                    <button class="time-btn" onclick="addExtraTime('${order.key}', 15)">+15 دقائق</button>
-                    ` : ''}
-                </div>
-                
-                <div class="prep-time ${isOverdue ? 'overdue' : ''}">
-                    <i class="fas fa-clock"></i>
-                    ${timeRemaining !== null ? 
-                        `الوقت المتبقي: ${timeRemaining} دقيقة` : 
-                        `التحضير: ${totalPrepTime} دقيقة`}
-                    ${addedMinutes > 0 ? `(+${addedMinutes})` : ''}
-                </div>
-                
-                <div class="arrival-time">
-                    <i class="fas fa-calendar-alt"></i>
-                    ${order.acceptedAt ? 'تم القبول: ' + formatDate(order.acceptedAt) : 'الطلب: ' + formatDate(order.timestamp)}
-                </div>
-                
-                <div class="order-buttons">
-                    ${isNew ? `
-                    <button class="btn btn-accept" onclick="acceptOrder('${order.key}')">
-                        <i class="fas fa-check"></i> قبول
-                    </button>
-                    <button class="btn btn-reject" onclick="rejectOrder('${order.key}')">
-                        <i class="fas fa-times"></i> رفض
-                    </button>
-                    ` : `
-                    <button class="btn btn-ready" onclick="markAsReady('${order.key}')">
-                        <i class="fas fa-check-double"></i> طلب جاهز
-                    </button>
-                    <button class="btn btn-print" onclick="printOrder('${order.key}')">
-                        <i class="fas fa-print"></i> طباعة
-                    </button>
-                    `}
                     
-                    <button class="btn btn-view" onclick="viewOrderDetails('${order.key}')">
-                        <i class="fas fa-eye"></i> عرض
-                    </button>
-                    
-                    ${!isNew ? `
-                    <button class="btn btn-delete" onclick="deleteOrder('${order.key}')">
-                        <i class="fas fa-trash"></i> حذف
-                    </button>
+                    ${order.deliveryArea && orderType === 'توصيل' ? `
+                    <div class="arrival-time">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${order.deliveryArea}
+                    </div>
                     ` : ''}
-                </div>
-            `;
-            
-            return card;
+                    
+                    ${isNew ? `
+                    <div class="time-controls">
+                        <button class="time-btn" onclick="addExtraTime('${order.key}', 5)">+5 دقائق</button>
+                        <button class="time-btn" onclick="addExtraTime('${order.key}', 10)">+10 دقائق</button>
+                        <button class="time-btn" onclick="addExtraTime('${order.key}', 15)">+15 دقائق</button>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="prep-time ${isOverdue ? 'overdue' : ''}">
+                        <i class="fas fa-clock"></i>
+                        ${prepTimeText}
+                    </div>
+                    
+                    <div class="arrival-time">
+                        <i class="fas fa-calendar-alt"></i>
+                        ${order.acceptedAt ? 'تم القبول: ' + formatDate(order.acceptedAt) : 'الطلب: ' + formatDate(order.timestamp)}
+                    </div>
+                    
+                    <div class="order-buttons">
+                        ${isNew ? `
+                        <button class="btn btn-accept" onclick="acceptOrder('${order.key}')">
+                            <i class="fas fa-check"></i> قبول
+                        </button>
+                        <button class="btn btn-reject" onclick="rejectOrder('${order.key}')">
+                            <i class="fas fa-times"></i> رفض
+                        </button>
+                        ` : `
+                        <button class="btn btn-ready" onclick="markAsReady('${order.key}')">
+                            <i class="fas fa-check-double"></i> طلب جاهز
+                        </button>
+                        <button class="btn btn-print" onclick="printOrder('${order.key}')">
+                            <i class="fas fa-print"></i> طباعة
+                        </button>
+                        `}
+                        
+                        <button class="btn btn-view" onclick="viewOrderDetails('${order.key}')">
+                            <i class="fas fa-eye"></i> عرض
+                        </button>
+                        
+                        ${!isNew ? `
+                        <button class="btn btn-delete" onclick="deleteOrder('${order.key}')">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                        ` : ''}
+                    </div>
+                `;
+                
+                return card;
+            } catch (e) {
+                console.error('خطأ في إنشاء كارت الطلب:', e);
+                // إرجاع كارت خطأ
+                const errorCard = document.createElement('div');
+                errorCard.className = 'order-card';
+                errorCard.innerHTML = `
+                    <div class="order-header">
+                        <span class="order-id">#خطأ</span>
+                    </div>
+                    <div style="color: #e53935; text-align: center; padding: 20px;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>خطأ في تحميل بيانات الطلب</p>
+                    </div>
+                `;
+                return errorCard;
+            }
         }
         
         // إضافة وقت إضافي
@@ -1368,7 +1496,7 @@
             const orderRef = database.ref('orders/' + orderKey);
             orderRef.transaction(currentOrder => {
                 if (currentOrder) {
-                    currentOrder.addedMinutes = (currentOrder.addedMinutes || 0) + minutes;
+                    currentOrder.addedMinutes = (parseInt(currentOrder.addedMinutes) || 0) + parseInt(minutes);
                     // إضافة إلى سجل التاريخ
                     if (!currentOrder.history) currentOrder.history = [];
                     currentOrder.history.push({
@@ -1379,17 +1507,22 @@
                     });
                 }
                 return currentOrder;
+            }).then(() => {
+                showMessage(`تم إضافة ${minutes} دقيقة للطلب`, 'success');
+            }).catch(error => {
+                showMessage('حدث خطأ أثناء إضافة الوقت: ' + error.message, 'error');
             });
         }
         
         // بدء العد التنازلي
         function startCountdown(orderKey, order) {
-            if (order.status !== 'accepted') return;
+            if (order.status !== 'accepted' || countdownIntervals[orderKey]) return;
             
-            const intervalId = setInterval(() => {
+            countdownIntervals[orderKey] = setInterval(() => {
                 const orderIndex = allOrders.findIndex(o => o.key === orderKey);
                 if (orderIndex === -1) {
-                    clearInterval(intervalId);
+                    clearInterval(countdownIntervals[orderKey]);
+                    delete countdownIntervals[orderKey];
                     return;
                 }
                 
@@ -1405,7 +1538,26 @@
                             prepTimeElement.classList.add('overdue');
                             markOverdue(orderKey);
                         }
-                        prepTimeElement.innerHTML = `<i class="fas fa-clock"></i> الوقت المتبقي: ${Math.max(0, timeRemaining)} دقيقة`;
+                        
+                        // تحديث نص الوقت
+                        let prepTimeText = '';
+                        if (typeof timeRemaining === 'number' && !isNaN(timeRemaining)) {
+                            if (timeRemaining <= 0) {
+                                prepTimeText = `تأخر: ${Math.abs(timeRemaining)} دقيقة`;
+                            } else {
+                                prepTimeText = `الوقت المتبقي: ${timeRemaining} دقيقة`;
+                            }
+                        } else {
+                            const totalPrepTime = (parseInt(currentOrder.prepTime) || 15) + (parseInt(currentOrder.addedMinutes) || 0);
+                            prepTimeText = `التحضير: ${totalPrepTime} دقيقة`;
+                        }
+                        
+                        // إضافة الإضافات إذا وجدت
+                        if (currentOrder.addedMinutes > 0) {
+                            prepTimeText += ` (+${currentOrder.addedMinutes})`;
+                        }
+                        
+                        prepTimeElement.innerHTML = `<i class="fas fa-clock"></i> ${prepTimeText}`;
                     }
                 }
                 
@@ -1415,21 +1567,34 @@
                 }
                 
             }, 60000); // كل دقيقة
-            
-            return intervalId;
+        }
+        
+        // إيقاف العد التنازلي
+        function stopCountdown(orderKey) {
+            if (countdownIntervals[orderKey]) {
+                clearInterval(countdownIntervals[orderKey]);
+                delete countdownIntervals[orderKey];
+            }
         }
         
         // تعليم الطلب كمتأخر
         function markOverdue(orderKey) {
             database.ref('orders/' + orderKey).update({
                 overdue: true
+            }).then(() => {
+                console.log('تم تعليم الطلب كمتأخر');
+            }).catch(error => {
+                console.error('خطأ في تعليم الطلب كمتأخر:', error);
             });
         }
         
         // عرض تفاصيل الطلب
         function viewOrderDetails(key) {
             const order = allOrders.find(o => o.key === key);
-            if (!order) return;
+            if (!order) {
+                showMessage('الطلب غير موجود', 'error');
+                return;
+            }
             
             currentOrder = order;
             
@@ -1441,16 +1606,20 @@
             
             // بناء تفاصيل الطلب
             let itemsHTML = '';
+            let totalItems = 0;
             if (order.items && order.items.length > 0) {
-                itemsHTML = order.items.map(item => `
-                    <div class="item-row">
-                        <div class="item-info">
-                            <div class="item-name">${item.name}</div>
-                            ${item.note ? `<div class="item-note">${item.note}</div>` : ''}
+                itemsHTML = order.items.map(item => {
+                    totalItems += parseInt(item.qty) || 1;
+                    return `
+                        <div class="item-row">
+                            <div class="item-info">
+                                <div class="item-name">${item.name || 'منتج غير معروف'}</div>
+                                ${item.note ? `<div class="item-note">${item.note}</div>` : ''}
+                            </div>
+                            <div class="item-qty">${item.qty || 1} ×</div>
                         </div>
-                        <div class="item-qty">${item.qty} ×</div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             } else {
                 itemsHTML = '<p style="text-align: center; color: #666;">لا توجد منتجات</p>';
             }
@@ -1474,6 +1643,9 @@
                 historyHTML = '<p style="color: #666;">لا يوجد سجل</p>';
             }
             
+            // حساب وقت التحضير الكلي
+            const totalPrepTime = (parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0);
+            
             orderDetailsBody.innerHTML = `
                 <div class="details-grid">
                     <div class="details-card">
@@ -1487,13 +1659,15 @@
                             <span class="detail-value">${order.customerPhone || 'لا يوجد'}</span>
                         </div>
                         <div class="detail-row">
-                            <span class="detail-label">المنطقة:</span>
-                            <span class="detail-value">${order.deliveryArea || 'غير محدد'}</span>
+                            <span class="detail-label">نوع الاستلام:</span>
+                            <span class="detail-value">${order.orderType === 'توصيل' ? 'توصيل' : 'استلام'}</span>
                         </div>
+                        ${order.deliveryArea && order.orderType === 'توصيل' ? `
                         <div class="detail-row">
-                            <span class="detail-label">نوع الطلب:</span>
-                            <span class="detail-value">${order.orderType || 'توصيل'}</span>
+                            <span class="detail-label">المنطقة:</span>
+                            <span class="detail-value">${order.deliveryArea}</span>
                         </div>
+                        ` : ''}
                     </div>
                     
                     <div class="details-card">
@@ -1516,8 +1690,26 @@
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">وقت التحضير:</span>
-                            <span class="detail-value">${order.prepTime || 15} دقيقة + ${order.addedMinutes || 0} = ${(order.prepTime || 15) + (order.addedMinutes || 0)} دقيقة</span>
+                            <span class="detail-value">${order.prepTime || 15} دقيقة + ${order.addedMinutes || 0} = ${totalPrepTime} دقيقة</span>
                         </div>
+                    </div>
+                </div>
+                
+                <div class="order-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-box"></i>
+                        <span>عدد الأصناف: <span class="stat-value">${order.items ? order.items.length : 0}</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-cube"></i>
+                        <span>إجمالي القطع: <span class="stat-value">${totalItems}</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span>الحالة: <span class="stat-value">${order.status === 'pending' ? 'قيد الانتظار' : 
+                            order.status === 'accepted' ? 'مقبول' : 
+                            order.status === 'ready' ? 'جاهز' : 
+                            order.status}</span></span>
                     </div>
                 </div>
                 
@@ -1565,24 +1757,29 @@
             };
             
             // إضافة إلى سجل التاريخ
-            updates['history'] = firebase.database.ServerValue.increment ? [] : [];
-            updates['history'] = [{ action: 'accept', by: 'manager', time: Date.now() }];
-            
-            database.ref('orders/' + key).update(updates)
-                .then(() => {
-                    showMessage('تم قبول الطلب بنجاح!', 'success');
-                    stopRepeatSoundForOrder(key);
-                    
-                    // إزالة تأثير الوهج
-                    const card = glowingOrderCards.get(key);
-                    if (card) {
-                        card.classList.remove('new-order-glow');
-                        glowingOrderCards.delete(key);
-                    }
-                })
-                .catch(error => {
-                    showMessage('حدث خطأ أثناء قبول الطلب: ' + error.message, 'error');
-                });
+            database.ref('orders/' + key).once('value').then(snapshot => {
+                const order = snapshot.val();
+                const history = order.history || [];
+                history.push({ action: 'accept', by: 'manager', time: Date.now() });
+                updates.history = history;
+                
+                database.ref('orders/' + key).update(updates)
+                    .then(() => {
+                        showMessage('تم قبول الطلب بنجاح!', 'success');
+                        stopRepeatSoundForOrder(key);
+                        
+                        // بدء العد التنازلي
+                        const orderIndex = allOrders.findIndex(o => o.key === key);
+                        if (orderIndex !== -1) {
+                            allOrders[orderIndex].status = 'accepted';
+                            allOrders[orderIndex].acceptedAt = Date.now();
+                            startCountdown(key, allOrders[orderIndex]);
+                        }
+                    })
+                    .catch(error => {
+                        showMessage('حدث خطأ أثناء قبول الطلب: ' + error.message, 'error');
+                    });
+            });
         }
         
         // رفض الطلب
@@ -1595,13 +1792,7 @@
                 .then(() => {
                     showMessage('تم رفض الطلب بنجاح!', 'success');
                     stopRepeatSoundForOrder(key);
-                    
-                    // إزالة تأثير الوهج
-                    const card = glowingOrderCards.get(key);
-                    if (card) {
-                        card.classList.remove('new-order-glow');
-                        glowingOrderCards.delete(key);
-                    }
+                    stopCountdown(key);
                 })
                 .catch(error => {
                     showMessage('حدث خطأ أثناء رفض الطلب: ' + error.message, 'error');
@@ -1616,6 +1807,7 @@
                 readyAt: Date.now()
             }).then(() => {
                 showMessage('تم تعليم الطلب كجاهز!', 'success');
+                stopCountdown(key);
             }).catch(error => {
                 showMessage('حدث خطأ أثناء تحديث حالة الطلب: ' + error.message, 'error');
             });
@@ -1624,17 +1816,13 @@
         // حذف الطلب
         function deleteOrder(key) {
             if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
-                database.ref('orders/' + key).remove()
+                database.ref('orders/' + key).update({
+                    status: 'deleted',
+                    deletedAt: Date.now()
+                })
                 .then(() => {
                     showMessage('تم حذف الطلب بنجاح!', 'success');
-                    stopRepeatSoundForOrder(key);
-                    
-                    // إزالة تأثير الوهج
-                    const card = glowingOrderCards.get(key);
-                    if (card) {
-                        card.classList.remove('new-order-glow');
-                        glowingOrderCards.delete(key);
-                    }
+                    stopCountdown(key);
                 })
                 .catch(error => {
                     showMessage('حدث خطأ أثناء حذف الطلب: ' + error.message, 'error');
@@ -1642,7 +1830,7 @@
             }
         }
         
-        // حذف جميع الطلبات فعلياً
+        // حذف جميع الطلبات
         deleteAllBtn.addEventListener('click', async () => {
             const password = prompt('أدخل كلمة المرور لحذف جميع الطلبات:');
             if (password !== '121212') {
@@ -1656,114 +1844,138 @@
             
             try {
                 const snapshot = await database.ref('orders').once('value');
-                const orders = [];
-                
-                // جمع جميع مفاتيح الطلبات لحذفها
-                snapshot.forEach(child => {
-                    orders.push(child.key);
-                });
-                
-                if (orders.length === 0) {
-                    showMessage('لا توجد طلبات لحذفها', 'info');
-                    return;
-                }
-                
-                // حذف كل طلب بشكل فردي
-                const deletePromises = orders.map(orderKey => 
-                    database.ref('orders/' + orderKey).remove()
-                );
-                
-                await Promise.all(deletePromises);
-                
-                // تسجيل العملية في سجل التدقيق
+                const updates = {};
                 const auditLog = {
                     action: 'delete_all',
                     by: 'manager',
                     time: Date.now(),
-                    count: orders.length
+                    count: snapshot.numChildren()
                 };
                 
-                await database.ref('auditLog/' + Date.now()).set(auditLog);
+                snapshot.forEach(child => {
+                    updates[child.key + '/status'] = 'deleted';
+                    updates[child.key + '/deletedAt'] = Date.now();
+                });
                 
-                showMessage(`تم حذف ${orders.length} طلب بنجاح`, 'success');
+                // تسجيل العملية في سجل التدقيق
+                updates['auditLog/' + Date.now()] = auditLog;
                 
-                // إيقاف جميع الأصوات المتكررة
-                if (repeatSoundInterval) {
-                    clearInterval(repeatSoundInterval);
-                    repeatSoundInterval = null;
-                }
-                pendingOrdersToAlert.clear();
-                glowingOrderCards.clear();
+                await database.ref().update(updates);
+                showMessage(`تم حذف ${snapshot.numChildren()} طلب بنجاح`, 'success');
                 
+                // إيقاف جميع العدادات التنازلية
+                Object.keys(countdownIntervals).forEach(key => {
+                    stopCountdown(key);
+                });
             } catch (error) {
                 showMessage('حدث خطأ أثناء حذف الطلبات: ' + error.message, 'error');
             }
         });
         
-        // طباعة الفاتورة
+        // طباعة الفاتورة - مع التعديلات المطلوبة
         function printReceipt(order) {
-            // تحديث بيانات الفاتورة
-            document.getElementById('receiptOrderId').textContent = `الطلب: #${order.id || order.key.substring(0, 6)}`;
-            document.getElementById('receiptDate').textContent = `التاريخ: ${formatDate(order.timestamp)}`;
-            document.getElementById('receiptCustomerName').textContent = `العميل: ${order.customerName || 'غير معروف'}`;
-            document.getElementById('receiptCustomerPhone').textContent = `الهاتف: ${order.customerPhone || 'لا يوجد'}`;
-            document.getElementById('receiptArea').textContent = `المنطقة: ${order.deliveryArea || 'غير محدد'}`;
-            document.getElementById('receiptPayment').textContent = `الدفع: ${order.paymentMethod || 'كاش'}`;
-            document.getElementById('receiptTotal').textContent = `الإجمالي: ${order.total || 0} دينار`;
-            
-            // تحديث المنتجات
-            const receiptItemsBody = document.getElementById('receiptItemsBody');
-            receiptItemsBody.innerHTML = '';
-            
-            if (order.items && order.items.length > 0) {
-                order.items.forEach(item => {
+            try {
+                // تحديث بيانات الفاتورة
+                document.getElementById('receiptOrderId').textContent = `الطلب: #${order.id || order.key.substring(0, 6)}`;
+                document.getElementById('receiptDate').textContent = `التاريخ: ${formatDateForPrint(order.timestamp)}`;
+                document.getElementById('receiptCustomerName').textContent = `العميل: ${order.customerName || 'غير معروف'}`;
+                document.getElementById('receiptCustomerPhone').textContent = `الهاتف: ${order.customerPhone || 'لا يوجد'}`;
+                document.getElementById('receiptPickupType').textContent = order.orderType === 'توصيل' ? 'توصيل' : 'استلام';
+                document.getElementById('receiptPayment').textContent = `الدفع: ${order.paymentMethod || 'كاش'}`;
+                document.getElementById('receiptTotal').textContent = `الإجمالي: ${order.total || 0} دينار`;
+                document.getElementById('receiptPrintDate').textContent = formatDateForPrint(Date.now());
+                
+                // تحديث المنتجات في جدول منظم
+                const receiptItemsBody = document.getElementById('receiptItemsBody');
+                receiptItemsBody.innerHTML = '';
+                
+                let totalItems = 0;
+                let totalQty = 0;
+                
+                if (order.items && order.items.length > 0) {
+                    order.items.forEach(item => {
+                        const qty = parseInt(item.qty) || 1;
+                        totalItems++;
+                        totalQty += qty;
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.name || 'منتج غير معروف'}</td>
+                            <td style="text-align: center;">${qty}</td>
+                            <td class="item-note-cell">${item.note || ''}</td>
+                        `;
+                        receiptItemsBody.appendChild(row);
+                    });
+                } else {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${item.name}${item.note ? ` (${item.note})` : ''}</td>
-                        <td>${item.qty}</td>
+                        <td colspan="3" style="text-align: center; padding: 10px 0;">لا توجد منتجات</td>
                     `;
                     receiptItemsBody.appendChild(row);
-                });
-            }
-            
-            // عرض الفاتورة وطباعتها
-            const receipt = document.getElementById('receipt');
-            receipt.style.display = 'block';
-            
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write('<html><head><title>طباعة الفاتورة</title>');
-            printWindow.document.write('<style>');
-            printWindow.document.write(`
-                @media print {
-                    body { 
-                        font-family: 'Courier New', monospace; 
-                        width: 80mm; 
-                        margin: 0; 
-                        padding: 5mm; 
-                        font-size: 10pt; 
-                        color: black; 
-                        background: white;
-                    }
-                    .no-print { display: none !important; }
-                    .receipt-header { text-align: center; margin-bottom: 8px; }
-                    .receipt-header h2 { font-size: 14pt; margin: 0; }
-                    .receipt-info { font-size: 9pt; margin: 8px 0; }
-                    table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-                    th, td { padding: 3px 0; text-align: right; border-bottom: 1px dashed #ccc; }
-                    .receipt-total { font-weight: bold; font-size: 11pt; text-align: center; margin-top: 15px; }
-                    .receipt-footer { text-align: center; margin-top: 15px; font-size: 8pt; color: #666; }
                 }
-            `);
-            printWindow.document.write('</style></head><body>');
-            printWindow.document.write(receipt.innerHTML);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            
-            setTimeout(() => {
-                printWindow.print();
-                printWindow.close();
-                receipt.style.display = 'none';
-            }, 500);
+                
+                // تحديث إحصائيات الطلب
+                const receiptStats = document.getElementById('receiptStats');
+                receiptStats.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; font-size: 9pt; margin: 5px 0;">
+                        <span>عدد الأصناف: <strong>${totalItems}</strong></span>
+                        <span>إجمالي القطع: <strong>${totalQty}</strong></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 9pt; margin: 5px 0;">
+                        <span>وقت التحضير: <strong>${(parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0)} دقيقة</strong></span>
+                        <span>الحالة: <strong>${order.status === 'pending' ? 'قيد الانتظار' : 
+                            order.status === 'accepted' ? 'مقبول' : 
+                            order.status === 'ready' ? 'جاهز' : 
+                            order.status}</strong></span>
+                    </div>
+                `;
+                
+                // عرض الفاتورة وطباعتها
+                const receipt = document.getElementById('receipt');
+                receipt.style.display = 'block';
+                
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write('<html><head><title>طباعة الفاتورة</title>');
+                printWindow.document.write('<style>');
+                printWindow.document.write(`
+                    @media print {
+                        body { 
+                            font-family: 'Courier New', monospace !important; 
+                            width: 80mm; 
+                            margin: 0; 
+                            padding: 5mm; 
+                            font-size: 10pt; 
+                            color: black; 
+                            background: white;
+                        }
+                        .no-print { display: none !important; }
+                        .receipt-header { text-align: center; margin-bottom: 8px; }
+                        .receipt-header h2 { font-size: 14pt; margin: 0; }
+                        .receipt-info { font-size: 9pt; margin: 8px 0; }
+                        .receipt-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 9pt; }
+                        .receipt-table th { text-align: right; border-bottom: 2px solid #000; padding: 8px 0; font-weight: bold; }
+                        .receipt-table td { text-align: right; border-bottom: 1px dashed #ccc; padding: 6px 0; }
+                        .receipt-table .item-note-cell { font-size: 8pt; color: #666; font-style: italic; }
+                        .receipt-total { font-weight: bold; font-size: 11pt; text-align: center; margin-top: 15px; }
+                        .receipt-footer { text-align: center; margin-top: 15px; font-size: 8pt; color: #666; }
+                    }
+                `);
+                printWindow.document.write('</style></head><body>');
+                printWindow.document.write(receipt.innerHTML);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                
+                setTimeout(() => {
+                    printWindow.print();
+                    setTimeout(() => {
+                        printWindow.close();
+                        receipt.style.display = 'none';
+                    }, 500);
+                }, 500);
+            } catch (error) {
+                console.error('خطأ في طباعة الفاتورة:', error);
+                showMessage('حدث خطأ أثناء طباعة الفاتورة: ' + error.message, 'error');
+            }
         }
         
         // طباعة الطلب (الوصل)
@@ -1781,21 +1993,24 @@
             message += `📦 رقم الطلب: #${order.id || order.key.substring(0, 6)}\n`;
             message += `👤 العميل: ${order.customerName || 'غير معروف'}\n`;
             message += `📱 الهاتف: ${order.customerPhone || 'لا يوجد'}\n`;
-            message += `📍 المنطقة: ${order.deliveryArea || 'غير محدد'}\n`;
-            message += `🚚 نوع الطلب: ${order.orderType || 'توصيل'}\n`;
+            message += `📍 نوع الاستلام: ${order.orderType === 'توصيل' ? 'توصيل' : 'استلام'}\n`;
+            if (order.deliveryArea && order.orderType === 'توصيل') {
+                message += `🗺️ المنطقة: ${order.deliveryArea}\n`;
+            }
             message += `💰 الإجمالي: ${order.total || 0} دينار\n`;
             message += `📝 الملاحظات: ${order.notes || 'لا توجد'}\n\n`;
             
             message += `🛒 المنتجات:\n`;
             if (order.items && order.items.length > 0) {
                 order.items.forEach(item => {
-                    message += `- ${item.name} (${item.qty})`;
+                    message += `- ${item.name || 'منتج غير معروف'} (${item.qty || 1})`;
                     if (item.note) message += ` - ${item.note}`;
                     message += `\n`;
                 });
             }
             
             message += `\n🕒 وقت الطلب: ${formatDate(order.timestamp)}\n`;
+            message += `⏰ وقت التحضير: ${(parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0)} دقيقة\n`;
             message += `====================\n`;
             
             const encodedMessage = encodeURIComponent(message);
@@ -1821,8 +2036,6 @@
                 messageDiv.style.background = '#43a047';
             } else if (type === 'error') {
                 messageDiv.style.background = '#e53935';
-            } else if (type === 'info') {
-                messageDiv.style.background = '#2196f3';
             } else {
                 messageDiv.style.background = '#2196f3';
             }
@@ -1852,22 +2065,38 @@
                 snapshot.forEach(child => {
                     const order = child.val();
                     if (order.status !== 'deleted' && order.status !== 'cancelled') {
+                        // حساب عدد القطع الإجمالي
+                        let totalItems = 0;
+                        let totalQty = 0;
+                        if (order.items && order.items.length > 0) {
+                            order.items.forEach(item => {
+                                totalItems++;
+                                totalQty += parseInt(item.qty) || 1;
+                            });
+                        }
+                        
                         data.push({
                             'رقم الطلب': order.id || child.key.substring(0, 6),
                             'اسم العميل': order.customerName || '',
                             'الهاتف': order.customerPhone || '',
+                            'نوع الاستلام': order.orderType === 'توصيل' ? 'توصيل' : 'استلام',
                             'المنطقة': order.deliveryArea || '',
-                            'نوع الطلب': order.orderType || '',
                             'طريقة الدفع': order.paymentMethod || '',
                             'الإجمالي': order.total || 0,
-                            'الحالة': order.status || 'pending',
-                            'وقت التحضير': (order.prepTime || 15) + (order.addedMinutes || 0) + ' دقيقة',
-                            'تاريخ الطلب': formatDate(order.timestamp),
-                            'تاريخ القبول': order.acceptedAt ? formatDate(order.acceptedAt) : '',
+                            'عدد الأصناف': totalItems,
+                            'إجمالي القطع': totalQty,
+                            'الحالة': order.status === 'pending' ? 'قيد الانتظار' : 
+                                      order.status === 'accepted' ? 'مقبول' : 
+                                      order.status === 'ready' ? 'جاهز' : 
+                                      order.status || 'غير معروف',
+                            'وقت التحضير': (parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0) + ' دقيقة',
+                            'تاريخ الطلب': formatDateForPrint(order.timestamp),
+                            'تاريخ القبول': order.acceptedAt ? formatDateForPrint(order.acceptedAt) : '',
+                            'تاريخ الجاهزية': order.readyAt ? formatDateForPrint(order.readyAt) : '',
                             'المنتجات': order.items ? order.items.map(item => 
                                 `${item.name} (${item.qty})${item.note ? ` - ${item.note}` : ''}`
                             ).join('; ') : '',
-                            'ملاحظات': order.notes || ''
+                            'ملاحظات العميل': order.notes || ''
                         });
                     }
                 });
@@ -1916,7 +2145,7 @@
             );
             const acceptedOrders = allOrders.filter(o => 
                 o.status && 
-                ['accepted', 'ready', 'onway'].includes(o.status) &&
+                ['accepted', 'ready'].includes(o.status) &&
                 o.status !== 'deleted' && 
                 o.status !== 'cancelled'
             );
@@ -1952,7 +2181,7 @@
             // فصل الطلبات حسب الحالة
             const newOrders = filteredOrders.filter(o => !o.status || o.status === 'pending');
             const acceptedOrders = filteredOrders.filter(o => 
-                o.status && ['accepted', 'ready', 'onway'].includes(o.status)
+                o.status && ['accepted', 'ready'].includes(o.status)
             );
             
             // فرز الطلبات حسب التاريخ (الأحدث أولاً)
@@ -1994,6 +2223,11 @@
                 acceptedOrders.forEach(order => {
                     const card = createOrderCard(order, false);
                     acceptedOrdersFragment.appendChild(card);
+                    
+                    // بدء العد التنازلي للطلبات المقبولة
+                    if (order.status === 'accepted' && !countdownIntervals[order.key]) {
+                        startCountdown(order.key, order);
+                    }
                 });
                 acceptedOrdersContainer.innerHTML = '';
                 acceptedOrdersContainer.appendChild(acceptedOrdersFragment);
@@ -2023,7 +2257,7 @@
                 if (isNewOrder) {
                     showNotification(order.key);
                 }
-            } else if (['accepted', 'ready', 'onway'].includes(order.status)) {
+            } else if (['accepted', 'ready'].includes(order.status)) {
                 const container = document.getElementById('acceptedOrders');
                 const noOrdersMsg = container.querySelector('.no-orders');
                 if (noOrdersMsg) {
@@ -2072,15 +2306,6 @@
                 if (order.status === 'accepted' && !existing.isNew) {
                     startCountdown(order.key, order);
                 }
-                
-                // تحديث تأثير الوهج
-                if (newIsNew && (!order.status || order.status === 'pending')) {
-                    newCard.classList.add('new-order-glow');
-                    glowingOrderCards.set(order.key, newCard);
-                } else {
-                    newCard.classList.remove('new-order-glow');
-                    glowingOrderCards.delete(order.key);
-                }
             }
         }
         
@@ -2096,14 +2321,13 @@
                 }
                 
                 orderCards.delete(orderKey);
-                
-                // إزالة من تأثير الوهج
-                glowingOrderCards.delete(orderKey);
-                
                 updateCounters();
                 
                 // إزالة من قائمة التكرار الصوتي
                 stopRepeatSoundForOrder(orderKey);
+                
+                // إيقاف العد التنازلي
+                stopCountdown(orderKey);
             }
         }
         
@@ -2116,12 +2340,13 @@
                 if (!order) return;
                 
                 order.key = snapshot.key;
-                order.prepTime = order.prepTime || 15; // افتراضي 15 دقيقة
+                order.prepTime = parseInt(order.prepTime) || 15; // افتراضي 15 دقيقة
                 
                 allOrders.push(order);
                 addOrderToUI(order, true);
             }, (error) => {
                 console.error('خطأ في child_added:', error);
+                showMessage('خطأ في تحميل الطلبات الجديدة', 'error');
             });
             
             ordersRef.on('child_changed', (snapshot) => {
@@ -2129,7 +2354,7 @@
                 if (!order) return;
                 
                 order.key = snapshot.key;
-                order.prepTime = order.prepTime || 15;
+                order.prepTime = parseInt(order.prepTime) || 15;
                 
                 const index = allOrders.findIndex(o => o.key === order.key);
                 if (index !== -1) {
@@ -2139,6 +2364,7 @@
                 updateOrderInUI(order);
             }, (error) => {
                 console.error('خطأ في child_changed:', error);
+                showMessage('خطأ في تحديث الطلب', 'error');
             });
             
             ordersRef.on('child_removed', (snapshot) => {
@@ -2147,6 +2373,7 @@
                 removeOrderFromUI(orderKey);
             }, (error) => {
                 console.error('خطأ في child_removed:', error);
+                showMessage('خطأ في حذف الطلب', 'error');
             });
         }
         
@@ -2158,6 +2385,42 @@
             
             // تحديث العدادات كل دقيقة
             setInterval(updateCounters, 60000);
+            
+            // تحديث جميع العدادات التنازلية كل دقيقة
+            setInterval(() => {
+                allOrders.forEach(order => {
+                    if (order.status === 'accepted' && countdownIntervals[order.key]) {
+                        // تحديث الوقت في الواجهة مباشرة
+                        const card = document.querySelector(`.order-card[data-key="${order.key}"]`);
+                        if (card) {
+                            const timeRemaining = getTimeRemaining(order);
+                            const prepTimeElement = card.querySelector('.prep-time');
+                            if (prepTimeElement) {
+                                let prepTimeText = '';
+                                if (typeof timeRemaining === 'number' && !isNaN(timeRemaining)) {
+                                    if (timeRemaining <= 0) {
+                                        prepTimeText = `تأخر: ${Math.abs(timeRemaining)} دقيقة`;
+                                        if (!order.overdue) {
+                                            prepTimeElement.classList.add('overdue');
+                                        }
+                                    } else {
+                                        prepTimeText = `الوقت المتبقي: ${timeRemaining} دقيقة`;
+                                    }
+                                } else {
+                                    const totalPrepTime = (parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0);
+                                    prepTimeText = `التحضير: ${totalPrepTime} دقيقة`;
+                                }
+                                
+                                if (order.addedMinutes > 0) {
+                                    prepTimeText += ` (+${order.addedMinutes})`;
+                                }
+                                
+                                prepTimeElement.innerHTML = `<i class="fas fa-clock"></i> ${prepTimeText}`;
+                            }
+                        }
+                    }
+                });
+            }, 30000); // كل 30 ثانية
         });
     </script>
 </body>
