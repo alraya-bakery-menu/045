@@ -794,6 +794,45 @@
             color: white;
             animation: blink 1s infinite;
         }
+        
+        /* تأثير الوميض للطلبات الجديدة */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #e53935, 0 0 10px #e53935; }
+            50% { box-shadow: 0 0 20px #e53935, 0 0 30px #e53935; }
+            100% { box-shadow: 0 0 5px #e53935, 0 0 10px #e53935; }
+        }
+        
+        .glowing-order {
+            animation: glow 2s infinite;
+            border-color: #ff6b6b !important;
+        }
+        
+        /* تأثير الوهج البسيط */
+        @keyframes subtle-glow {
+            0%, 100% { 
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08), 0 0 0 rgba(229, 57, 53, 0.3);
+            }
+            50% { 
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08), 0 0 15px rgba(229, 57, 53, 0.5);
+            }
+        }
+        
+        .new-order-glow {
+            animation: subtle-glow 2s infinite ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .new-order-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #e53935, #ff6b6b, #e53935);
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -991,6 +1030,7 @@
         let audioBuffer = null;
         let repeatSoundInterval = null;
         let pendingOrdersToAlert = new Set();
+        let glowingOrderCards = new Map(); // لتتبع الكروت التي لها تأثير الوهج
         
         // عناصر DOM
         const newOrdersContainer = document.getElementById('newOrders');
@@ -1023,9 +1063,8 @@
         
         // صوت التنبيه
         const alertSound = new Audio('./sounds/alert.mp3');
-alertSound.preload = "auto";
-alertSound.volume = 0.7;
-
+        alertSound.preload = "auto";
+        alertSound.volume = 0.7;
         
         // تهيئة Web Audio API
         function initAudio() {
@@ -1039,8 +1078,7 @@ alertSound.volume = 0.7;
         
         async function loadAudioBuffer() {
             try {
-                const response = await fetch('./sounds/alert.mp3'
-);
+                const response = await fetch('./sounds/alert.mp3');
                 const arrayBuffer = await response.arrayBuffer();
                 audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
             } catch (e) {
@@ -1076,19 +1114,29 @@ alertSound.volume = 0.7;
             }
         }
         
-        // تكرار صوت التنبيه للطلبات المنتظرة
+        // تكرار صوت التنبيه للطلبات المنتظرة لمدة 10 ثوانٍ
         function startRepeatSoundForOrder(orderKey) {
             if (!soundEnabled) return;
             
             pendingOrdersToAlert.add(orderKey);
             
+            // إذا كان هناك فاصل زمني يعمل بالفعل، لا تبدأ واحداً جديداً
             if (repeatSoundInterval) return;
+            
+            let soundCount = 0;
+            const maxSounds = 5; // 10 ثوانٍ = 5 مرات كل 2 ثانية
             
             repeatSoundInterval = setInterval(async () => {
                 if (pendingOrdersToAlert.size > 0 && soundEnabled) {
                     await playAlertSound();
+                    soundCount++;
+                    
+                    // توقف بعد 10 ثوانٍ (5 مرات)
+                    if (soundCount >= maxSounds) {
+                        stopRepeatSoundForOrder(orderKey);
+                    }
                 }
-            }, 8000); // كل 8 ثواني
+            }, 2000); // كل 2 ثانية
         }
         
         function stopRepeatSoundForOrder(orderKey) {
@@ -1158,7 +1206,7 @@ alertSound.volume = 0.7;
             // تشغيل الصوت
             await playAlertSound();
             
-            // بدء تكرار الصوت للطلب الجديد
+            // بدء تكرار الصوت للطلب الجديد لمدة 10 ثوانٍ
             startRepeatSoundForOrder(orderKey);
             
             // إخفاء الإشعار بعد 5 ثواني
@@ -1210,6 +1258,13 @@ alertSound.volume = 0.7;
             
             const card = document.createElement('div');
             card.className = 'order-card new-order';
+            
+            // إضافة تأثير الوهج للطلبات الجديدة غير المقبولة
+            if (isNew && (!order.status || order.status === 'pending')) {
+                card.classList.add('new-order-glow');
+                glowingOrderCards.set(order.key, card);
+            }
+            
             card.dataset.key = order.key;
             
             // تحديد لون الحالة
@@ -1517,6 +1572,13 @@ alertSound.volume = 0.7;
                 .then(() => {
                     showMessage('تم قبول الطلب بنجاح!', 'success');
                     stopRepeatSoundForOrder(key);
+                    
+                    // إزالة تأثير الوهج
+                    const card = glowingOrderCards.get(key);
+                    if (card) {
+                        card.classList.remove('new-order-glow');
+                        glowingOrderCards.delete(key);
+                    }
                 })
                 .catch(error => {
                     showMessage('حدث خطأ أثناء قبول الطلب: ' + error.message, 'error');
@@ -1533,6 +1595,13 @@ alertSound.volume = 0.7;
                 .then(() => {
                     showMessage('تم رفض الطلب بنجاح!', 'success');
                     stopRepeatSoundForOrder(key);
+                    
+                    // إزالة تأثير الوهج
+                    const card = glowingOrderCards.get(key);
+                    if (card) {
+                        card.classList.remove('new-order-glow');
+                        glowingOrderCards.delete(key);
+                    }
                 })
                 .catch(error => {
                     showMessage('حدث خطأ أثناء رفض الطلب: ' + error.message, 'error');
@@ -1555,12 +1624,17 @@ alertSound.volume = 0.7;
         // حذف الطلب
         function deleteOrder(key) {
             if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
-                database.ref('orders/' + key).update({
-                    status: 'deleted',
-                    deletedAt: Date.now()
-                })
+                database.ref('orders/' + key).remove()
                 .then(() => {
                     showMessage('تم حذف الطلب بنجاح!', 'success');
+                    stopRepeatSoundForOrder(key);
+                    
+                    // إزالة تأثير الوهج
+                    const card = glowingOrderCards.get(key);
+                    if (card) {
+                        card.classList.remove('new-order-glow');
+                        glowingOrderCards.delete(key);
+                    }
                 })
                 .catch(error => {
                     showMessage('حدث خطأ أثناء حذف الطلب: ' + error.message, 'error');
@@ -1568,7 +1642,7 @@ alertSound.volume = 0.7;
             }
         }
         
-        // حذف جميع الطلبات
+        // حذف جميع الطلبات فعلياً
         deleteAllBtn.addEventListener('click', async () => {
             const password = prompt('أدخل كلمة المرور لحذف جميع الطلبات:');
             if (password !== '121212') {
@@ -1582,24 +1656,45 @@ alertSound.volume = 0.7;
             
             try {
                 const snapshot = await database.ref('orders').once('value');
-                const updates = {};
+                const orders = [];
+                
+                // جمع جميع مفاتيح الطلبات لحذفها
+                snapshot.forEach(child => {
+                    orders.push(child.key);
+                });
+                
+                if (orders.length === 0) {
+                    showMessage('لا توجد طلبات لحذفها', 'info');
+                    return;
+                }
+                
+                // حذف كل طلب بشكل فردي
+                const deletePromises = orders.map(orderKey => 
+                    database.ref('orders/' + orderKey).remove()
+                );
+                
+                await Promise.all(deletePromises);
+                
+                // تسجيل العملية في سجل التدقيق
                 const auditLog = {
                     action: 'delete_all',
                     by: 'manager',
                     time: Date.now(),
-                    count: snapshot.numChildren()
+                    count: orders.length
                 };
                 
-                snapshot.forEach(child => {
-                    updates[child.key + '/status'] = 'deleted';
-                    updates[child.key + '/deletedAt'] = Date.now();
-                });
+                await database.ref('auditLog/' + Date.now()).set(auditLog);
                 
-                // تسجيل العملية في سجل التدقيق
-                updates['auditLog/' + Date.now()] = auditLog;
+                showMessage(`تم حذف ${orders.length} طلب بنجاح`, 'success');
                 
-                await database.ref().update(updates);
-                showMessage(`تم حذف ${snapshot.numChildren()} طلب بنجاح`, 'success');
+                // إيقاف جميع الأصوات المتكررة
+                if (repeatSoundInterval) {
+                    clearInterval(repeatSoundInterval);
+                    repeatSoundInterval = null;
+                }
+                pendingOrdersToAlert.clear();
+                glowingOrderCards.clear();
+                
             } catch (error) {
                 showMessage('حدث خطأ أثناء حذف الطلبات: ' + error.message, 'error');
             }
@@ -1726,6 +1821,8 @@ alertSound.volume = 0.7;
                 messageDiv.style.background = '#43a047';
             } else if (type === 'error') {
                 messageDiv.style.background = '#e53935';
+            } else if (type === 'info') {
+                messageDiv.style.background = '#2196f3';
             } else {
                 messageDiv.style.background = '#2196f3';
             }
@@ -1975,6 +2072,15 @@ alertSound.volume = 0.7;
                 if (order.status === 'accepted' && !existing.isNew) {
                     startCountdown(order.key, order);
                 }
+                
+                // تحديث تأثير الوهج
+                if (newIsNew && (!order.status || order.status === 'pending')) {
+                    newCard.classList.add('new-order-glow');
+                    glowingOrderCards.set(order.key, newCard);
+                } else {
+                    newCard.classList.remove('new-order-glow');
+                    glowingOrderCards.delete(order.key);
+                }
             }
         }
         
@@ -1990,6 +2096,10 @@ alertSound.volume = 0.7;
                 }
                 
                 orderCards.delete(orderKey);
+                
+                // إزالة من تأثير الوهج
+                glowingOrderCards.delete(orderKey);
+                
                 updateCounters();
                 
                 // إزالة من قائمة التكرار الصوتي
