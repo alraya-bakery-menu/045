@@ -89,6 +89,78 @@
             color: #ff6b6b;
         }
         
+        /* القائمة الجانبية */
+        .sidebar {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            z-index: 1000;
+        }
+        
+        .sidebar-toggle {
+            background: linear-gradient(135deg, #e53935 0%, #b71c1c 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(229, 57, 53, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .sidebar-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .sidebar-menu {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            min-width: 200px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .sidebar-menu.show {
+            display: flex;
+        }
+        
+        .sidebar-btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #f5f5f5;
+            color: #333;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            text-align: right;
+        }
+        
+        .sidebar-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .sidebar-btn.export {
+            background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+            color: white;
+        }
+        
+        .sidebar-btn.delete {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: white;
+        }
+        
         /* الإشعارات */
         .notification {
             position: fixed;
@@ -354,11 +426,6 @@
             color: white;
         }
         
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-        }
-        
         .btn-close {
             background: #666;
             color: white;
@@ -531,26 +598,6 @@
             flex-wrap: wrap;
         }
         
-        /* زر التصدير */
-        .export-btn {
-            background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
-        }
-        
-        .export-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(67, 160, 71, 0.3);
-        }
-        
         /* تذييل الصفحة */
         .footer {
             text-align: center;
@@ -680,6 +727,11 @@
                 flex-direction: column;
                 align-items: stretch;
             }
+            
+            .sidebar {
+                right: 10px;
+                top: 10px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -723,56 +775,9 @@
             font-weight: bold;
         }
         
-        /* فلتر البحث */
+        /* فلتر البحث - مخفي */
         .search-filter {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        
-        .date-range {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .date-input {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            flex: 1;
-        }
-        
-        /* زر حذف الكل */
-        .delete-all-btn {
-            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
-        }
-        
-        .delete-all-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
+            display: none;
         }
         
         /* حالة الطلب */
@@ -834,29 +839,6 @@
         }
         
         /* تحسينات إضافية */
-        .order-stats {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-item {
-            background: #f8f9fa;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .stat-value {
-            font-weight: bold;
-            color: #e53935;
-        }
-        
-        /* تحسينات للأزرار */
         .btn-sm {
             padding: 6px 12px;
             font-size: 12px;
@@ -880,6 +862,21 @@
         </div>
     </div>
     
+    <!-- القائمة الجانبية -->
+    <div class="sidebar no-print">
+        <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="sidebar-menu" id="sidebarMenu">
+            <button class="sidebar-btn export" id="exportBtnMenu">
+                <i class="fas fa-file-excel"></i> تصدير إلى Excel
+            </button>
+            <button class="sidebar-btn delete" id="deleteAllBtnMenu">
+                <i class="fas fa-trash-alt"></i> حذف الكل
+            </button>
+        </div>
+    </div>
+    
     <!-- الرأس -->
     <header class="header no-print">
         <h1><i class="fas fa-utensils"></i> نظام إدارة طلبات المطعم</h1>
@@ -897,19 +894,11 @@
                     <i class="fas fa-wifi"></i> جاري الاتصال...
                 </div>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="export-btn" id="exportBtn">
-                    <i class="fas fa-file-excel"></i> تصدير إلى Excel
-                </button>
-                <button class="delete-all-btn" id="deleteAllBtn">
-                    <i class="fas fa-trash-alt"></i> حذف الكل
-                </button>
-            </div>
         </div>
     </header>
     
-    <!-- فلتر البحث -->
-    <div class="search-filter no-print">
+    <!-- فلتر البحث (مخفي) -->
+    <div class="search-filter no-print" style="display: none;">
         <input type="text" class="search-input" id="searchInput" placeholder="بحث باسم العميل أو رقم الهاتف...">
         <div class="date-range">
             <input type="date" class="date-input" id="startDate">
@@ -973,9 +962,6 @@
             </div>
             
             <div class="modal-footer">
-                <button class="btn btn-whatsapp" id="whatsappBtn">
-                    <i class="fab fa-whatsapp"></i> إرسال عبر واتساب
-                </button>
                 <button class="btn btn-print" id="printReceiptBtn">
                     <i class="fas fa-print"></i> طباعة الفاتورة
                 </button>
@@ -993,34 +979,27 @@
     
     <!-- فاتورة الطباعة (مخفية) -->
     <div id="receipt" style="display: none; width: 80mm; padding: 10px; background: white; font-family: 'Courier New', monospace;">
-        <div class="receipt-header">
-            <h2 style="margin: 0; font-size: 16pt;">مطعم ومخبز الطازج</h2>
-            <p style="margin: 2px 0; font-size: 10pt;">عمان - الجبيهة</p>
-            <p style="margin: 2px 0; font-size: 10pt;">هاتف: 0778715612</p>
+        <div class="receipt-header" style="text-align: center; margin-bottom: 15px;">
+            <h2 style="margin: 0; font-size: 18pt; font-weight: bold;">مطعم ومخبز الطازج</h2>
+            <p style="margin: 5px 0; font-size: 10pt;">عمان - الجبيهة</p>
+            <p style="margin: 5px 0; font-size: 10pt;">هاتف: 0778715612</p>
         </div>
         
-        <div class="receipt-info">
-            <p id="receiptOrderId" style="margin: 3px 0; font-size: 10pt;">الطلب: #20454</p>
-            <p id="receiptDate" style="margin: 3px 0; font-size: 10pt;">التاريخ: 12/12/2023 10:30</p>
-            <hr style="border: none; border-top: 1px dashed #000; margin: 8px 0;">
+        <div class="customer-info" style="text-align: right; margin-bottom: 15px;">
+            <p style="margin: 5px 0; font-size: 11pt;">اسم العميل : <span id="receiptCustomerName" style="font-weight: bold;">فلان فلان</span></p>
+            <p style="margin: 5px 0; font-size: 11pt;">رقم الهاتف : <span id="receiptCustomerPhone" style="font-weight: bold;">0778715612</span></p>
+            <p style="margin: 5px 0; font-size: 11pt;">نوع الطلب : <span id="receiptPickupType" style="font-weight: bold;">استلام</span></p>
+            <p style="margin: 5px 0; font-size: 11pt;">وقت التسليم : <span id="receiptDeliveryTime" style="font-weight: bold;">بعد 20 دقيقة</span></p>
         </div>
         
-        <div class="customer-info">
-            <p id="receiptCustomerName" style="margin: 3px 0; font-size: 10pt;">العميل: محمد سعيد</p>
-            <p id="receiptCustomerPhone" style="margin: 3px 0; font-size: 10pt;">الهاتف: 0778715612</p>
-            <p id="receiptPickupType" style="margin: 3px 0; font-size: 10pt; font-weight: bold;">استلام</p>
-            <p id="receiptPayment" style="margin: 3px 0; font-size: 10pt;">الدفع: كاش</p>
-        </div>
-        
-        <hr style="border: none; border-top: 1px dashed #000; margin: 8px 0;">
+        <hr style="border: none; border-top: 1px dashed #000; margin: 10px 0;">
         
         <div class="receipt-items">
-            <table class="receipt-table">
+            <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
                 <thead>
                     <tr>
-                        <th style="width: 50%;">المنتج</th>
-                        <th style="width: 25%; text-align: center;">الكمية</th>
-                        <th style="width: 25%;">الملاحظات</th>
+                        <th style="text-align: right; border-bottom: 2px solid #000; padding: 8px 0; font-size: 11pt;">اسم المنتج</th>
+                        <th style="text-align: center; border-bottom: 2px solid #000; padding: 8px 0; font-size: 11pt;">الكمية</th>
                     </tr>
                 </thead>
                 <tbody id="receiptItemsBody">
@@ -1029,20 +1008,13 @@
             </table>
         </div>
         
-        <hr style="border: none; border-top: 1px dashed #000; margin: 8px 0;">
+        <hr style="border: none; border-top: 1px dashed #000; margin: 10px 0;">
         
-        <div class="order-stats" id="receiptStats" style="margin: 10px 0;">
-            <!-- سيتم إضافة إحصائيات الطلب هنا -->
-        </div>
-        
-        <div class="receipt-total">
-            <p id="receiptTotal" style="font-weight: bold; font-size: 12pt; text-align: center; margin: 10px 0;">الإجمالي: 4.50 دينار</p>
-        </div>
-        
-        <div class="receipt-footer">
-            <p style="margin: 5px 0; font-size: 9pt;">شكراً لاختياركم مطعمنا</p>
-            <p style="margin: 5px 0; font-size: 9pt;">نتمنى لكم وجبة شهية</p>
-            <p style="margin: 5px 0; font-size: 8pt; color: #666;">تاريخ الطباعة: <span id="receiptPrintDate"></span></p>
+        <div class="receipt-footer" style="text-align: center; margin-top: 15px;">
+            <p style="margin: 5px 0; font-size: 10pt;">شكراً لاختياركم مطعمنا</p>
+            <p style="margin: 5px 0; font-size: 10pt;">نتمنى لكم وجبة شهية</p>
+            <p style="margin: 5px 0; font-size: 9pt; color: #666;">رقم الطلب: <span id="receiptOrderId">#20454</span></p>
+            <p style="margin: 5px 0; font-size: 9pt; color: #666;">تاريخ الطباعة: <span id="receiptPrintDate"></span></p>
         </div>
     </div>
 
@@ -1081,26 +1053,16 @@
         const notification = document.getElementById('notification');
         const enableSoundBtn = document.getElementById('enableSoundBtn');
         const muteBtn = document.getElementById('muteBtn');
-        const exportBtn = document.getElementById('exportBtn');
-        const deleteAllBtn = document.getElementById('deleteAllBtn');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const closeDetailsBtn = document.getElementById('closeDetailsBtn');
-        const whatsappBtn = document.getElementById('whatsappBtn');
         const printReceiptBtn = document.getElementById('printReceiptBtn');
         const newOrdersCount = document.getElementById('newOrdersCount');
         const acceptedOrdersCount = document.getElementById('acceptedOrdersCount');
         const networkStatus = document.getElementById('networkStatus');
-        const searchInput = document.getElementById('searchInput');
-        const startDate = document.getElementById('startDate');
-        const endDate = document.getElementById('endDate');
-        const filterBtn = document.getElementById('filterBtn');
-        const clearFilterBtn = document.getElementById('clearFilterBtn');
-        
-        // تهيئة التواريخ
-        const today = new Date();
-        const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-        startDate.valueAsDate = lastWeek;
-        endDate.valueAsDate = today;
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const exportBtnMenu = document.getElementById('exportBtnMenu');
+        const deleteAllBtnMenu = document.getElementById('deleteAllBtnMenu');
         
         // صوت التنبيه
         const alertSound = new Audio('./sounds/alert.mp3');
@@ -1155,7 +1117,7 @@
             }
         }
         
-        // تكرار صوت التنبيه للطلبات المنتظرة
+        // تكرار صوت التنبيه للطلبات المنتظرة (كل 10 ثواني)
         function startRepeatSoundForOrder(orderKey) {
             if (!soundEnabled) return;
             
@@ -1167,7 +1129,7 @@
                 if (pendingOrdersToAlert.size > 0 && soundEnabled) {
                     await playAlertSound();
                 }
-            }, 8000); // كل 8 ثواني
+            }, 10000); // كل 10 ثواني
         }
         
         function stopRepeatSoundForOrder(orderKey) {
@@ -1213,6 +1175,18 @@
             pendingOrdersToAlert.clear();
         });
         
+        // القائمة الجانبية
+        sidebarToggle.addEventListener('click', () => {
+            sidebarMenu.classList.toggle('show');
+        });
+        
+        // إغلاق القائمة عند النقر خارجها
+        document.addEventListener('click', (e) => {
+            if (!sidebarToggle.contains(e.target) && !sidebarMenu.contains(e.target)) {
+                sidebarMenu.classList.remove('show');
+            }
+        });
+        
         // تحديث حالة الشبكة
         function updateNetworkStatus(connected) {
             if (connected) {
@@ -1237,7 +1211,7 @@
             // تشغيل الصوت
             await playAlertSound();
             
-            // بدء تكرار الصوت للطلب الجديد
+            // بدء تكرار الصوت للطلب الجديد (كل 10 ثواني)
             startRepeatSoundForOrder(orderKey);
             
             // إخفاء الإشعار بعد 5 ثواني
@@ -1246,14 +1220,13 @@
             }, 5000);
         }
         
-        // تنسيق التاريخ - إصلاح المشكلة
+        // تنسيق التاريخ
         function formatDate(timestamp) {
             if (!timestamp) return 'غير محدد';
             
             try {
                 const date = new Date(timestamp);
                 if (isNaN(date.getTime())) {
-                    // إذا كان timestamp ليس رقمًا، حاول تحويله
                     const parsedTimestamp = parseInt(timestamp);
                     if (!isNaN(parsedTimestamp)) {
                         const newDate = new Date(parsedTimestamp);
@@ -1320,7 +1293,7 @@
             }
         }
         
-        // حساب الوقت المتبقي - إصلاح مشكلة NaN
+        // حساب الوقت المتبقي
         function getTimeRemaining(order) {
             try {
                 if (!order || !order.prepTime) return order?.prepTime || 15;
@@ -1328,7 +1301,6 @@
                 const orderDate = new Date(order.timestamp);
                 const acceptedAt = order.acceptedAt ? new Date(order.acceptedAt) : orderDate;
                 
-                // التحقق من صحة التاريخ
                 if (isNaN(acceptedAt.getTime())) {
                     return order.prepTime || 15;
                 }
@@ -1341,7 +1313,6 @@
                 const diffMins = Math.floor(diffMs / 60000);
                 const minutesLeft = totalPrepTime - diffMins;
                 
-                // التحقق من أن النتيجة ليست NaN
                 if (isNaN(minutesLeft)) {
                     return totalPrepTime;
                 }
@@ -1380,13 +1351,17 @@
                     statusText = 'متأخر';
                 }
                 
-                // حساب الوقت المتبقي مع معالجة الأخطاء
+                // حساب الوقت المتبقي
                 const timeRemaining = getTimeRemaining(order);
                 const isOverdue = timeRemaining !== null && timeRemaining <= 0;
                 
-                // نص وقت التحضير
+                // نص وقت التحضير (يظهر فقط للطلبات المقبولة وليست جاهزة)
                 let prepTimeText = '';
-                if (typeof timeRemaining === 'number' && !isNaN(timeRemaining)) {
+                let showPrepTime = true;
+                
+                if (order.status === 'ready') {
+                    showPrepTime = false; // إخفاء المؤقت للطلبات الجاهزة
+                } else if (typeof timeRemaining === 'number' && !isNaN(timeRemaining)) {
                     if (timeRemaining <= 0 && order.status === 'accepted') {
                         prepTimeText = `تأخر: ${Math.abs(timeRemaining)} دقيقة`;
                     } else {
@@ -1397,7 +1372,7 @@
                 }
                 
                 // إضافة الإضافات إذا وجدت
-                if (addedMinutes > 0) {
+                if (addedMinutes > 0 && showPrepTime) {
                     prepTimeText += ` (+${addedMinutes})`;
                 }
                 
@@ -1433,10 +1408,12 @@
                     </div>
                     ` : ''}
                     
+                    ${showPrepTime ? `
                     <div class="prep-time ${isOverdue ? 'overdue' : ''}">
                         <i class="fas fa-clock"></i>
                         ${prepTimeText}
                     </div>
+                    ` : ''}
                     
                     <div class="arrival-time">
                         <i class="fas fa-calendar-alt"></i>
@@ -1452,9 +1429,11 @@
                             <i class="fas fa-times"></i> رفض
                         </button>
                         ` : `
+                        ${order.status !== 'ready' ? `
                         <button class="btn btn-ready" onclick="markAsReady('${order.key}')">
                             <i class="fas fa-check-double"></i> طلب جاهز
                         </button>
+                        ` : ''}
                         <button class="btn btn-print" onclick="printOrder('${order.key}')">
                             <i class="fas fa-print"></i> طباعة
                         </button>
@@ -1475,7 +1454,6 @@
                 return card;
             } catch (e) {
                 console.error('خطأ في إنشاء كارت الطلب:', e);
-                // إرجاع كارت خطأ
                 const errorCard = document.createElement('div');
                 errorCard.className = 'order-card';
                 errorCard.innerHTML = `
@@ -1497,7 +1475,6 @@
             orderRef.transaction(currentOrder => {
                 if (currentOrder) {
                     currentOrder.addedMinutes = (parseInt(currentOrder.addedMinutes) || 0) + parseInt(minutes);
-                    // إضافة إلى سجل التاريخ
                     if (!currentOrder.history) currentOrder.history = [];
                     currentOrder.history.push({
                         action: 'add_time',
@@ -1529,7 +1506,6 @@
                 const currentOrder = allOrders[orderIndex];
                 const timeRemaining = getTimeRemaining(currentOrder);
                 
-                // تحديث العرض
                 const card = document.querySelector(`.order-card[data-key="${orderKey}"]`);
                 if (card) {
                     const prepTimeElement = card.querySelector('.prep-time');
@@ -1539,7 +1515,6 @@
                             markOverdue(orderKey);
                         }
                         
-                        // تحديث نص الوقت
                         let prepTimeText = '';
                         if (typeof timeRemaining === 'number' && !isNaN(timeRemaining)) {
                             if (timeRemaining <= 0) {
@@ -1552,7 +1527,6 @@
                             prepTimeText = `التحضير: ${totalPrepTime} دقيقة`;
                         }
                         
-                        // إضافة الإضافات إذا وجدت
                         if (currentOrder.addedMinutes > 0) {
                             prepTimeText += ` (+${currentOrder.addedMinutes})`;
                         }
@@ -1561,12 +1535,11 @@
                     }
                 }
                 
-                // تحديث حالة التأخير
                 if (timeRemaining <= 0 && !currentOrder.overdue) {
                     markOverdue(orderKey);
                 }
                 
-            }, 60000); // كل دقيقة
+            }, 60000);
         }
         
         // إيقاف العد التنازلي
@@ -1598,18 +1571,13 @@
             
             currentOrder = order;
             
-            // تحديث زر الواتساب
-            whatsappBtn.onclick = () => sendToWhatsApp(order);
-            
             // تحديث زر الطباعة
             printReceiptBtn.onclick = () => printReceipt(order);
             
             // بناء تفاصيل الطلب
             let itemsHTML = '';
-            let totalItems = 0;
             if (order.items && order.items.length > 0) {
                 itemsHTML = order.items.map(item => {
-                    totalItems += parseInt(item.qty) || 1;
                     return `
                         <div class="item-row">
                             <div class="item-info">
@@ -1695,24 +1663,6 @@
                     </div>
                 </div>
                 
-                <div class="order-stats">
-                    <div class="stat-item">
-                        <i class="fas fa-box"></i>
-                        <span>عدد الأصناف: <span class="stat-value">${order.items ? order.items.length : 0}</span></span>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-cube"></i>
-                        <span>إجمالي القطع: <span class="stat-value">${totalItems}</span></span>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-clock"></i>
-                        <span>الحالة: <span class="stat-value">${order.status === 'pending' ? 'قيد الانتظار' : 
-                            order.status === 'accepted' ? 'مقبول' : 
-                            order.status === 'ready' ? 'جاهز' : 
-                            order.status}</span></span>
-                    </div>
-                </div>
-                
                 <div class="items-list">
                     <h3><i class="fas fa-shopping-basket"></i> المنتجات (${order.items ? order.items.length : 0})</h3>
                     ${itemsHTML}
@@ -1756,7 +1706,6 @@
                 acceptedAt: Date.now()
             };
             
-            // إضافة إلى سجل التاريخ
             database.ref('orders/' + key).once('value').then(snapshot => {
                 const order = snapshot.val();
                 const history = order.history || [];
@@ -1768,7 +1717,6 @@
                         showMessage('تم قبول الطلب بنجاح!', 'success');
                         stopRepeatSoundForOrder(key);
                         
-                        // بدء العد التنازلي
                         const orderIndex = allOrders.findIndex(o => o.key === key);
                         if (orderIndex !== -1) {
                             allOrders[orderIndex].status = 'accepted';
@@ -1808,6 +1756,22 @@
             }).then(() => {
                 showMessage('تم تعليم الطلب كجاهز!', 'success');
                 stopCountdown(key);
+                
+                // إزالة المؤقت وزر الجاهزية من الكارت
+                const card = document.querySelector(`.order-card[data-key="${key}"]`);
+                if (card) {
+                    // إزالة المؤقت
+                    const prepTimeElement = card.querySelector('.prep-time');
+                    if (prepTimeElement) {
+                        prepTimeElement.remove();
+                    }
+                    
+                    // إزالة زر الجاهزية
+                    const readyButton = card.querySelector('.btn-ready');
+                    if (readyButton) {
+                        readyButton.remove();
+                    }
+                }
             }).catch(error => {
                 showMessage('حدث خطأ أثناء تحديث حالة الطلب: ' + error.message, 'error');
             });
@@ -1831,7 +1795,7 @@
         }
         
         // حذف جميع الطلبات
-        deleteAllBtn.addEventListener('click', async () => {
+        function deleteAllOrders() {
             const password = prompt('أدخل كلمة المرور لحذف جميع الطلبات:');
             if (password !== '121212') {
                 alert('كلمة المرور غير صحيحة');
@@ -1843,92 +1807,74 @@
             }
             
             try {
-                const snapshot = await database.ref('orders').once('value');
-                const updates = {};
-                const auditLog = {
-                    action: 'delete_all',
-                    by: 'manager',
-                    time: Date.now(),
-                    count: snapshot.numChildren()
-                };
-                
-                snapshot.forEach(child => {
-                    updates[child.key + '/status'] = 'deleted';
-                    updates[child.key + '/deletedAt'] = Date.now();
-                });
-                
-                // تسجيل العملية في سجل التدقيق
-                updates['auditLog/' + Date.now()] = auditLog;
-                
-                await database.ref().update(updates);
-                showMessage(`تم حذف ${snapshot.numChildren()} طلب بنجاح`, 'success');
-                
-                // إيقاف جميع العدادات التنازلية
-                Object.keys(countdownIntervals).forEach(key => {
-                    stopCountdown(key);
+                const snapshot = database.ref('orders').once('value').then(snapshot => {
+                    const updates = {};
+                    const auditLog = {
+                        action: 'delete_all',
+                        by: 'manager',
+                        time: Date.now(),
+                        count: snapshot.numChildren()
+                    };
+                    
+                    snapshot.forEach(child => {
+                        updates[child.key + '/status'] = 'deleted';
+                        updates[child.key + '/deletedAt'] = Date.now();
+                    });
+                    
+                    updates['auditLog/' + Date.now()] = auditLog;
+                    
+                    database.ref().update(updates).then(() => {
+                        showMessage(`تم حذف ${snapshot.numChildren()} طلب بنجاح`, 'success');
+                        
+                        Object.keys(countdownIntervals).forEach(key => {
+                            stopCountdown(key);
+                        });
+                    });
                 });
             } catch (error) {
                 showMessage('حدث خطأ أثناء حذف الطلبات: ' + error.message, 'error');
             }
-        });
+        }
         
-        // طباعة الفاتورة - مع التعديلات المطلوبة
+        deleteAllBtnMenu.addEventListener('click', deleteAllOrders);
+        
+        // طباعة الفاتورة - تصميم جديد
         function printReceipt(order) {
             try {
-                // تحديث بيانات الفاتورة
-                document.getElementById('receiptOrderId').textContent = `الطلب: #${order.id || order.key.substring(0, 6)}`;
-                document.getElementById('receiptDate').textContent = `التاريخ: ${formatDateForPrint(order.timestamp)}`;
-                document.getElementById('receiptCustomerName').textContent = `العميل: ${order.customerName || 'غير معروف'}`;
-                document.getElementById('receiptCustomerPhone').textContent = `الهاتف: ${order.customerPhone || 'لا يوجد'}`;
+                // تحديث بيانات الفاتورة حسب الصورة المرفقة
+                document.getElementById('receiptOrderId').textContent = `#${order.id || order.key.substring(0, 6)}`;
+                document.getElementById('receiptDate').textContent = formatDateForPrint(order.timestamp);
+                document.getElementById('receiptCustomerName').textContent = order.customerName || 'غير معروف';
+                document.getElementById('receiptCustomerPhone').textContent = order.customerPhone || 'لا يوجد';
                 document.getElementById('receiptPickupType').textContent = order.orderType === 'توصيل' ? 'توصيل' : 'استلام';
-                document.getElementById('receiptPayment').textContent = `الدفع: ${order.paymentMethod || 'كاش'}`;
-                document.getElementById('receiptTotal').textContent = `الإجمالي: ${order.total || 0} دينار`;
+                
+                // حساب وقت التسليم
+                const totalPrepTime = (parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0);
+                document.getElementById('receiptDeliveryTime').textContent = `بعد ${totalPrepTime} دقيقة`;
+                
                 document.getElementById('receiptPrintDate').textContent = formatDateForPrint(Date.now());
                 
-                // تحديث المنتجات في جدول منظم
+                // تحديث المنتجات
                 const receiptItemsBody = document.getElementById('receiptItemsBody');
                 receiptItemsBody.innerHTML = '';
-                
-                let totalItems = 0;
-                let totalQty = 0;
                 
                 if (order.items && order.items.length > 0) {
                     order.items.forEach(item => {
                         const qty = parseInt(item.qty) || 1;
-                        totalItems++;
-                        totalQty += qty;
-                        
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${item.name || 'منتج غير معروف'}</td>
-                            <td style="text-align: center;">${qty}</td>
-                            <td class="item-note-cell">${item.note || ''}</td>
+                            <td style="text-align: right; padding: 5px 0; font-size: 11pt;">${item.name || 'منتج غير معروف'}</td>
+                            <td style="text-align: center; padding: 5px 0; font-size: 11pt;">${qty}</td>
                         `;
                         receiptItemsBody.appendChild(row);
                     });
                 } else {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td colspan="3" style="text-align: center; padding: 10px 0;">لا توجد منتجات</td>
+                        <td colspan="2" style="text-align: center; padding: 10px 0; font-size: 11pt;">لا توجد منتجات</td>
                     `;
                     receiptItemsBody.appendChild(row);
                 }
-                
-                // تحديث إحصائيات الطلب
-                const receiptStats = document.getElementById('receiptStats');
-                receiptStats.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; font-size: 9pt; margin: 5px 0;">
-                        <span>عدد الأصناف: <strong>${totalItems}</strong></span>
-                        <span>إجمالي القطع: <strong>${totalQty}</strong></span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 9pt; margin: 5px 0;">
-                        <span>وقت التحضير: <strong>${(parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0)} دقيقة</strong></span>
-                        <span>الحالة: <strong>${order.status === 'pending' ? 'قيد الانتظار' : 
-                            order.status === 'accepted' ? 'مقبول' : 
-                            order.status === 'ready' ? 'جاهز' : 
-                            order.status}</strong></span>
-                    </div>
-                `;
                 
                 // عرض الفاتورة وطباعتها
                 const receipt = document.getElementById('receipt');
@@ -1949,15 +1895,16 @@
                             background: white;
                         }
                         .no-print { display: none !important; }
-                        .receipt-header { text-align: center; margin-bottom: 8px; }
-                        .receipt-header h2 { font-size: 14pt; margin: 0; }
-                        .receipt-info { font-size: 9pt; margin: 8px 0; }
-                        .receipt-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 9pt; }
-                        .receipt-table th { text-align: right; border-bottom: 2px solid #000; padding: 8px 0; font-weight: bold; }
-                        .receipt-table td { text-align: right; border-bottom: 1px dashed #ccc; padding: 6px 0; }
-                        .receipt-table .item-note-cell { font-size: 8pt; color: #666; font-style: italic; }
-                        .receipt-total { font-weight: bold; font-size: 11pt; text-align: center; margin-top: 15px; }
-                        .receipt-footer { text-align: center; margin-top: 15px; font-size: 8pt; color: #666; }
+                        .receipt-header { text-align: center; margin-bottom: 15px; }
+                        .receipt-header h2 { font-size: 18pt; margin: 0; font-weight: bold; }
+                        .customer-info { text-align: right; margin-bottom: 15px; }
+                        .customer-info p { margin: 5px 0; font-size: 11pt; }
+                        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+                        th { text-align: right; border-bottom: 2px solid #000; padding: 8px 0; font-size: 11pt; }
+                        td { text-align: right; padding: 5px 0; font-size: 11pt; }
+                        td:last-child { text-align: center; }
+                        .receipt-footer { text-align: center; margin-top: 15px; }
+                        .receipt-footer p { margin: 5px 0; font-size: 10pt; }
                     }
                 `);
                 printWindow.document.write('</style></head><body>');
@@ -1978,7 +1925,7 @@
             }
         }
         
-        // طباعة الطلب (الوصل)
+        // طباعة الطلب
         function printOrder(key) {
             const order = allOrders.find(o => o.key === key);
             if (order) {
@@ -1986,37 +1933,75 @@
             }
         }
         
-        // إرسال الطلب عبر واتساب
-        function sendToWhatsApp(order) {
-            let message = `طلب جديد من المطعم\n`;
-            message += `====================\n`;
-            message += `📦 رقم الطلب: #${order.id || order.key.substring(0, 6)}\n`;
-            message += `👤 العميل: ${order.customerName || 'غير معروف'}\n`;
-            message += `📱 الهاتف: ${order.customerPhone || 'لا يوجد'}\n`;
-            message += `📍 نوع الاستلام: ${order.orderType === 'توصيل' ? 'توصيل' : 'استلام'}\n`;
-            if (order.deliveryArea && order.orderType === 'توصيل') {
-                message += `🗺️ المنطقة: ${order.deliveryArea}\n`;
-            }
-            message += `💰 الإجمالي: ${order.total || 0} دينار\n`;
-            message += `📝 الملاحظات: ${order.notes || 'لا توجد'}\n\n`;
-            
-            message += `🛒 المنتجات:\n`;
-            if (order.items && order.items.length > 0) {
-                order.items.forEach(item => {
-                    message += `- ${item.name || 'منتج غير معروف'} (${item.qty || 1})`;
-                    if (item.note) message += ` - ${item.note}`;
-                    message += `\n`;
+        // تصدير الطلبات إلى Excel
+        function exportToExcel() {
+            try {
+                const today = new Date();
+                const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                const startTS = lastWeek.getTime();
+                const endTS = today.getTime() + 24 * 60 * 60 * 1000 - 1;
+                
+                const q = database.ref('orders').orderByChild('timestamp').startAt(startTS).endAt(endTS);
+                q.once('value').then(snapshot => {
+                    const data = [];
+                    snapshot.forEach(child => {
+                        const order = child.val();
+                        if (order.status !== 'deleted' && order.status !== 'cancelled') {
+                            // حساب عدد القطع الإجمالي
+                            let totalItems = 0;
+                            let totalQty = 0;
+                            if (order.items && order.items.length > 0) {
+                                order.items.forEach(item => {
+                                    totalItems++;
+                                    totalQty += parseInt(item.qty) || 1;
+                                });
+                            }
+                            
+                            data.push({
+                                'رقم الطلب': order.id || child.key.substring(0, 6),
+                                'اسم العميل': order.customerName || '',
+                                'الهاتف': order.customerPhone || '',
+                                'نوع الاستلام': order.orderType === 'توصيل' ? 'توصيل' : 'استلام',
+                                'المنطقة': order.deliveryArea || '',
+                                'طريقة الدفع': order.paymentMethod || '',
+                                'الإجمالي': order.total || 0,
+                                'عدد الأصناف': totalItems,
+                                'إجمالي القطع': totalQty,
+                                'الحالة': order.status === 'pending' ? 'قيد الانتظار' : 
+                                          order.status === 'accepted' ? 'مقبول' : 
+                                          order.status === 'ready' ? 'جاهز' : 
+                                          order.status || 'غير معروف',
+                                'وقت التحضير': (parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0) + ' دقيقة',
+                                'تاريخ الطلب': formatDateForPrint(order.timestamp),
+                                'تاريخ القبول': order.acceptedAt ? formatDateForPrint(order.acceptedAt) : '',
+                                'تاريخ الجاهزية': order.readyAt ? formatDateForPrint(order.readyAt) : '',
+                                'المنتجات': order.items ? order.items.map(item => 
+                                    `${item.name} (${item.qty})${item.note ? ` - ${item.note}` : ''}`
+                                ).join('; ') : '',
+                                'ملاحظات العميل': order.notes || ''
+                            });
+                        }
+                    });
+                    
+                    if (data.length === 0) {
+                        showMessage('لا توجد طلبات للتصدير في النطاق المحدد!', 'error');
+                        return;
+                    }
+                    
+                    const ws = XLSX.utils.json_to_sheet(data);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "الطلبات");
+                    const dateStr = today.toISOString().split('T')[0];
+                    XLSX.writeFile(wb, `طلبات_${dateStr}.xlsx`);
+                    
+                    showMessage(`تم تصدير ${data.length} طلب بنجاح!`, 'success');
                 });
+            } catch (error) {
+                showMessage('حدث خطأ أثناء التصدير: ' + error.message, 'error');
             }
-            
-            message += `\n🕒 وقت الطلب: ${formatDate(order.timestamp)}\n`;
-            message += `⏰ وقت التحضير: ${(parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0)} دقيقة\n`;
-            message += `====================\n`;
-            
-            const encodedMessage = encodeURIComponent(message);
-            const phoneNumber = "962778715612";
-            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
         }
+        
+        exportBtnMenu.addEventListener('click', exportToExcel);
         
         // عرض رسالة
         function showMessage(text, type) {
@@ -2052,90 +2037,6 @@
             }, 3000);
         }
         
-        // تصدير الطلبات إلى Excel
-        exportBtn.addEventListener('click', async () => {
-            try {
-                const startTS = new Date(startDate.value).getTime();
-                const endTS = new Date(endDate.value).getTime() + 24 * 60 * 60 * 1000 - 1; // حتى نهاية اليوم
-                
-                const q = database.ref('orders').orderByChild('timestamp').startAt(startTS).endAt(endTS);
-                const snapshot = await q.once('value');
-                
-                const data = [];
-                snapshot.forEach(child => {
-                    const order = child.val();
-                    if (order.status !== 'deleted' && order.status !== 'cancelled') {
-                        // حساب عدد القطع الإجمالي
-                        let totalItems = 0;
-                        let totalQty = 0;
-                        if (order.items && order.items.length > 0) {
-                            order.items.forEach(item => {
-                                totalItems++;
-                                totalQty += parseInt(item.qty) || 1;
-                            });
-                        }
-                        
-                        data.push({
-                            'رقم الطلب': order.id || child.key.substring(0, 6),
-                            'اسم العميل': order.customerName || '',
-                            'الهاتف': order.customerPhone || '',
-                            'نوع الاستلام': order.orderType === 'توصيل' ? 'توصيل' : 'استلام',
-                            'المنطقة': order.deliveryArea || '',
-                            'طريقة الدفع': order.paymentMethod || '',
-                            'الإجمالي': order.total || 0,
-                            'عدد الأصناف': totalItems,
-                            'إجمالي القطع': totalQty,
-                            'الحالة': order.status === 'pending' ? 'قيد الانتظار' : 
-                                      order.status === 'accepted' ? 'مقبول' : 
-                                      order.status === 'ready' ? 'جاهز' : 
-                                      order.status || 'غير معروف',
-                            'وقت التحضير': (parseInt(order.prepTime) || 15) + (parseInt(order.addedMinutes) || 0) + ' دقيقة',
-                            'تاريخ الطلب': formatDateForPrint(order.timestamp),
-                            'تاريخ القبول': order.acceptedAt ? formatDateForPrint(order.acceptedAt) : '',
-                            'تاريخ الجاهزية': order.readyAt ? formatDateForPrint(order.readyAt) : '',
-                            'المنتجات': order.items ? order.items.map(item => 
-                                `${item.name} (${item.qty})${item.note ? ` - ${item.note}` : ''}`
-                            ).join('; ') : '',
-                            'ملاحظات العميل': order.notes || ''
-                        });
-                    }
-                });
-                
-                if (data.length === 0) {
-                    showMessage('لا توجد طلبات للتصدير في النطاق المحدد!', 'error');
-                    return;
-                }
-                
-                const ws = XLSX.utils.json_to_sheet(data);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "الطلبات");
-                XLSX.writeFile(wb, `طلبات_${startDate.value}_${endDate.value}.xlsx`);
-                
-                showMessage(`تم تصدير ${data.length} طلب بنجاح!`, 'success');
-            } catch (error) {
-                showMessage('حدث خطأ أثناء التصدير: ' + error.message, 'error');
-            }
-        });
-        
-        // تصفية البحث
-        function filterOrders() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const startTS = startDate.value ? new Date(startDate.value).getTime() : null;
-            const endTS = endDate.value ? new Date(endDate.value).getTime() + 24 * 60 * 60 * 1000 - 1 : null;
-            
-            updateOrdersUI(searchTerm, startTS, endTS);
-        }
-        
-        filterBtn.addEventListener('click', filterOrders);
-        clearFilterBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            const today = new Date();
-            const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-            startDate.valueAsDate = lastWeek;
-            endDate.valueAsDate = today;
-            updateOrdersUI();
-        });
-        
         // تحديث العداد
         function updateCounters() {
             const newOrders = allOrders.filter(o => 
@@ -2154,89 +2055,6 @@
             acceptedOrdersCount.textContent = acceptedOrders.length;
         }
         
-        // تحديث واجهة الطلبات مع التصفية
-        function updateOrdersUI(searchTerm = '', startTS = null, endTS = null) {
-            // تصفية الطلبات
-            let filteredOrders = allOrders.filter(order => {
-                if (order.status === 'deleted' || order.status === 'cancelled') return false;
-                
-                // تصفية حسب النص
-                if (searchTerm) {
-                    const matchesName = order.customerName && 
-                        order.customerName.toLowerCase().includes(searchTerm);
-                    const matchesPhone = order.customerPhone && 
-                        order.customerPhone.includes(searchTerm);
-                    const matchesId = (order.id || order.key).toLowerCase().includes(searchTerm);
-                    
-                    if (!matchesName && !matchesPhone && !matchesId) return false;
-                }
-                
-                // تصفية حسب التاريخ
-                if (startTS && order.timestamp < startTS) return false;
-                if (endTS && order.timestamp > endTS) return false;
-                
-                return true;
-            });
-            
-            // فصل الطلبات حسب الحالة
-            const newOrders = filteredOrders.filter(o => !o.status || o.status === 'pending');
-            const acceptedOrders = filteredOrders.filter(o => 
-                o.status && ['accepted', 'ready'].includes(o.status)
-            );
-            
-            // فرز الطلبات حسب التاريخ (الأحدث أولاً)
-            newOrders.sort((a, b) => b.timestamp - a.timestamp);
-            acceptedOrders.sort((a, b) => b.timestamp - a.timestamp);
-            
-            // استخدام DocumentFragment للأداء
-            const newOrdersFragment = document.createDocumentFragment();
-            const acceptedOrdersFragment = document.createDocumentFragment();
-            
-            // عرض الطلبات الجديدة
-            if (newOrders.length === 0) {
-                newOrdersContainer.innerHTML = `
-                    <div class="no-orders" style="text-align: center; padding: 40px; color: #666;">
-                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; color: #ddd;"></i>
-                        <h3>لا توجد طلبات جديدة</h3>
-                        <p>في انتظار وصول الطلبات الجديدة...</p>
-                    </div>
-                `;
-            } else {
-                newOrders.forEach(order => {
-                    const card = createOrderCard(order, true);
-                    newOrdersFragment.appendChild(card);
-                });
-                newOrdersContainer.innerHTML = '';
-                newOrdersContainer.appendChild(newOrdersFragment);
-            }
-            
-            // عرض الطلبات المقبولة
-            if (acceptedOrders.length === 0) {
-                acceptedOrdersContainer.innerHTML = `
-                    <div class="no-orders" style="text-align: center; padding: 40px; color: #666;">
-                        <i class="fas fa-clipboard-check" style="font-size: 48px; margin-bottom: 15px; color: #ddd;"></i>
-                        <h3>لا توجد طلبات مقبولة</h3>
-                        <p>سيظهر هنا الطلبات التي تم قبولها...</p>
-                    </div>
-                `;
-            } else {
-                acceptedOrders.forEach(order => {
-                    const card = createOrderCard(order, false);
-                    acceptedOrdersFragment.appendChild(card);
-                    
-                    // بدء العد التنازلي للطلبات المقبولة
-                    if (order.status === 'accepted' && !countdownIntervals[order.key]) {
-                        startCountdown(order.key, order);
-                    }
-                });
-                acceptedOrdersContainer.innerHTML = '';
-                acceptedOrdersContainer.appendChild(acceptedOrdersFragment);
-            }
-            
-            // تحديث العدادات
-            updateCounters();
-        }
-        
         // إدارة كروت الطلبات
         const orderCards = new Map();
         
@@ -2245,7 +2063,6 @@
             const card = createOrderCard(order, isNew);
             
             if (isNew) {
-                // إضافة إلى بداية القائمة (الأحدث أولاً)
                 const container = document.getElementById('newOrders');
                 const noOrdersMsg = container.querySelector('.no-orders');
                 if (noOrdersMsg) {
@@ -2253,7 +2070,6 @@
                 }
                 container.prepend(card);
                 
-                // إذا كان طلب جديد، عرض الإشعار
                 if (isNewOrder) {
                     showNotification(order.key);
                 }
@@ -2265,7 +2081,6 @@
                 }
                 container.prepend(card);
                 
-                // بدء العد التنازلي إذا كان مقبولاً
                 if (order.status === 'accepted') {
                     startCountdown(order.key, order);
                 }
@@ -2284,12 +2099,10 @@
             
             const newIsNew = !order.status || order.status === 'pending';
             
-            // إذا تغيرت الحالة، انقل الكارت
             if (existing.isNew !== newIsNew) {
                 removeOrderFromUI(order.key);
                 addOrderToUI(order);
             } else {
-                // تحديث الكارت الموجود
                 const container = existing.isNew ? 
                     document.getElementById('newOrders') : 
                     document.getElementById('acceptedOrders');
@@ -2302,7 +2115,6 @@
                 
                 orderCards.set(order.key, { card: newCard, isNew: newIsNew });
                 
-                // بدء العد التنازلي إذا أصبح مقبولاً
                 if (order.status === 'accepted' && !existing.isNew) {
                     startCountdown(order.key, order);
                 }
@@ -2323,10 +2135,7 @@
                 orderCards.delete(orderKey);
                 updateCounters();
                 
-                // إزالة من قائمة التكرار الصوتي
                 stopRepeatSoundForOrder(orderKey);
-                
-                // إيقاف العد التنازلي
                 stopCountdown(orderKey);
             }
         }
@@ -2340,7 +2149,7 @@
                 if (!order) return;
                 
                 order.key = snapshot.key;
-                order.prepTime = parseInt(order.prepTime) || 15; // افتراضي 15 دقيقة
+                order.prepTime = parseInt(order.prepTime) || 15;
                 
                 allOrders.push(order);
                 addOrderToUI(order, true);
@@ -2390,7 +2199,6 @@
             setInterval(() => {
                 allOrders.forEach(order => {
                     if (order.status === 'accepted' && countdownIntervals[order.key]) {
-                        // تحديث الوقت في الواجهة مباشرة
                         const card = document.querySelector(`.order-card[data-key="${order.key}"]`);
                         if (card) {
                             const timeRemaining = getTimeRemaining(order);
@@ -2420,7 +2228,7 @@
                         }
                     }
                 });
-            }, 30000); // كل 30 ثانية
+            }, 30000);
         });
     </script>
 </body>
