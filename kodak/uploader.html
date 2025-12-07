@@ -1268,7 +1268,7 @@
         endDate.valueAsDate = today;
         
         // صوت التنبيه
-        const alertSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+        const alertSound = new Audio('./sounds/alert.mp3');
         alertSound.preload = "auto";
         alertSound.volume = 0.7;
         
@@ -1305,7 +1305,7 @@
         
         async function loadAudioBuffer() {
             try {
-                const response = await fetch('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+                const response = await fetch('./sounds/alert.mp3');
                 const arrayBuffer = await response.arrayBuffer();
                 audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
             } catch (e) {
